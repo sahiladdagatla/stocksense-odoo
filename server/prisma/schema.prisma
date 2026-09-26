@@ -1,0 +1,193 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  MANAGER
+  STAFF
+}
+
+/// INTERNAL locations hold real stock. VENDOR / CUSTOMER / LOSS are virtual:
+/// they model the outside world, never hold quants and have no stock limits.
+enum LocType {
+  INTERNAL
+  VENDOR
+  CUSTOMER
+  LOSS
+}
+
+enum OpType {
+  RECEIPT
+  DELIVERY
+  INTERNAL
+  ADJUSTMENT
+}
+
+enum OpStatus {
+  DRAFT
+  WAITING
+  READY
+  DONE
+  CANCELED
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         Role      @default(STAFF)
+  otpHash      String?
+  otpExpiry    DateTime?
+  /// Failed OTP verifications for the current OTP (brute-force guard).
+  otpAttempts  Int       @default(0)
+  createdAt    DateTime  @default(now())
+
+  operations Operation[]
+  moves      StockMove[]
+}
+
+model Warehouse {
+  id        Int        @id @default(autoincrement())
+  name      String
+  code      String     @unique
+  address   String?
+  createdAt DateTime   @default(now())
+  locations Location[]
+}
+
+model Location {
+  id          Int        @id @default(autoincrement())
+  name        String
+  /// Full path, e.g. "WH1/Stock/Rack A". Unique across the system.
+  fullName    String     @unique
+  type        LocType
+  warehouseId Int?
+  warehouse   Warehouse? @relation(fields: [warehouseId], references: [id], onDelete: Restrict)
+  parentId    Int?
+  parent      Location?  @relation("LocationTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children    Location[] @relation("LocationTree")
+  createdAt   DateTime   @default(now())
+
+  quants       StockQuant[]
+  sourceOps    Operation[]  @relation("OpSource")
+  destOps      Operation[]  @relation("OpDest")
+  movesOut     StockMove[]  @relation("MoveFrom")
+  movesIn      StockMove[]  @relation("MoveTo")
+
+  @@index([warehouseId])
+  @@index([parentId])
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  products  Product[]
+}
+
+model Product {
+  id         Int      @id @default(autoincrement())
+  name       String
+  sku        String   @unique
+  uom        String
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  reorderMin Decimal  @default(0) @db.Decimal(14, 3)
+  reorderQty Decimal  @default(0) @db.Decimal(14, 3)
+  createdAt  DateTime @default(now())
+
+  quants StockQuant[]
+  lines  OperationLine[]
+  moves  StockMove[]
+
+  @@index([categoryId])
+  @@index([name])
+}
+
+/// Cache of on-hand stock per (product, internal location).
+/// Written ONLY by the stock engine, in the same transaction as the StockMoves.
+model StockQuant {
+  id         Int      @id @default(autoincrement())
+  productId  Int
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+  locationId Int
+  location   Location @relation(fields: [locationId], references: [id], onDelete: Restrict)
+  quantity   Decimal  @default(0) @db.Decimal(14, 3)
+  updatedAt  DateTime @updatedAt
+
+  @@unique([productId, locationId])
+  @@index([locationId])
+}
+
+model Operation {
+  id            Int       @id @default(autoincrement())
+  reference     String    @unique
+  type          OpType
+  status        OpStatus  @default(DRAFT)
+  partner       String?
+  sourceLocId   Int
+  sourceLoc     Location  @relation("OpSource", fields: [sourceLocId], references: [id], onDelete: Restrict)
+  destLocId     Int
+  destLoc       Location  @relation("OpDest", fields: [destLocId], references: [id], onDelete: Restrict)
+  scheduledDate DateTime
+  validatedAt   DateTime?
+  createdById   Int
+  createdBy     User      @relation(fields: [createdById], references: [id], onDelete: Restrict)
+  notes         String?
+  createdAt     DateTime  @default(now())
+
+  lines OperationLine[]
+  moves StockMove[]
+
+  @@index([type, status])
+  @@index([status])
+  @@index([scheduledDate])
+}
+
+model OperationLine {
+  id          Int       @id @default(autoincrement())
+  operationId Int
+  operation   Operation @relation(fields: [operationId], references: [id], onDelete: Cascade)
+  productId   Int
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Restrict)
+  demandQty   Decimal   @db.Decimal(14, 3)
+  doneQty     Decimal   @default(0) @db.Decimal(14, 3)
+
+  @@unique([operationId, productId])
+  @@index([productId])
+}
+
+/// Append-only stock ledger. A DB trigger rejects UPDATE and DELETE (see migration).
+model StockMove {
+  id          Int        @id @default(autoincrement())
+  productId   Int
+  product     Product    @relation(fields: [productId], references: [id], onDelete: Restrict)
+  fromLocId   Int
+  fromLoc     Location   @relation("MoveFrom", fields: [fromLocId], references: [id], onDelete: Restrict)
+  toLocId     Int
+  toLoc       Location   @relation("MoveTo", fields: [toLocId], references: [id], onDelete: Restrict)
+  quantity    Decimal    @db.Decimal(14, 3)
+  operationId Int?
+  operation   Operation? @relation(fields: [operationId], references: [id], onDelete: Restrict)
+  userId      Int
+  user        User       @relation(fields: [userId], references: [id], onDelete: Restrict)
+  createdAt   DateTime   @default(now())
+
+  @@index([productId, createdAt])
+  @@index([fromLocId])
+  @@index([toLocId])
+  @@index([operationId])
+  @@index([createdAt])
+}
+
+/// Per-key counters for document references, e.g. key "WH1/IN" → WH1/IN/0001.
+model Sequence {
+  key  String @id
+  next Int    @default(1)
+}
