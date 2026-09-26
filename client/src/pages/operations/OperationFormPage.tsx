@@ -373,7 +373,18 @@ export function OperationFormPage({ type }: { type: DocType }) {
               </Button>
             )}
             {op && doneEditable && (
-              <Button disabled={busy} onClick={() => actions.requestValidate(op, persist)}>
+              <Button
+                disabled={busy}
+                onClick={() =>
+                  actions.requestValidate(
+                    op,
+                    persist,
+                    draft.lines.some(
+                      (l) => Number(l.doneQty) > 0 && Number(l.doneQty) < Number(l.demandQty),
+                    ),
+                  )
+                }
+              >
                 <CheckCircle2 /> Validate
               </Button>
             )}
@@ -682,6 +693,35 @@ export function OperationFormPage({ type }: { type: DocType }) {
                   </div>
                 ))}
               </dl>
+              {op?.backorderOf && (
+                <p className="mt-3 border-t border-divider pt-3 text-sm text-muted-foreground">
+                  Backorder of{' '}
+                  <Link
+                    to={`${meta.path}/${op.backorderOf.id}`}
+                    className="font-mono font-semibold text-plum-nav hover:underline"
+                  >
+                    {op.backorderOf.reference}
+                  </Link>
+                </p>
+              )}
+              {op && op.backorders.length > 0 && (
+                <div className="mt-3 border-t border-divider pt-3 text-sm">
+                  <p className="mb-1.5 text-muted-foreground">Remainder moved to</p>
+                  <ul className="space-y-1.5">
+                    {op.backorders.map((b) => (
+                      <li key={b.id} className="flex items-center justify-between gap-2">
+                        <Link
+                          to={`${meta.path}/${b.id}`}
+                          className="font-mono font-semibold text-plum-nav hover:underline"
+                        >
+                          {b.reference}
+                        </Link>
+                        <StatusPill status={b.status} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </Panel>
             <Panel className="p-5">
               <h3 className="mb-1 font-display text-headline-sm font-semibold">Ledger effect</h3>

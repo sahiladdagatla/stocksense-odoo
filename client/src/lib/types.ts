@@ -133,9 +133,14 @@ export type OperationLine = {
   product: { id: number; name: string; sku: string; uom: string };
 };
 
+export type OpLink = { id: number; reference: string; status: OpStatus };
+
 export type OperationDetail = Omit<OperationSummary, '_count' | 'createdBy'> & {
   createdBy: { id: number; name: string; role: Role };
   lines: OperationLine[];
+  /** Set when this document holds the remainder of a partially validated one. */
+  backorderOf: OpLink | null;
+  backorders: OpLink[];
 };
 
 export type OperationCounts = Record<OpStatus, number> & { total: number };

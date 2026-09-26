@@ -78,3 +78,5 @@ export const moveQuery = z.object({
 
 export type OperationQuery = z.infer<typeof operationQuery>;
 export type MoveQuery = z.infer<typeof moveQuery>;
+
+export const validateBody = z.object({ createBackorder: z.boolean().optional() }).default({});

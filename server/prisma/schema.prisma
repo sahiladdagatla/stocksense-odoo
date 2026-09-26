@@ -143,6 +143,10 @@ model Operation {
   createdBy     User      @relation(fields: [createdById], references: [id], onDelete: Restrict)
   notes         String?
   createdAt     DateTime  @default(now())
+  /// Set when this document was created for the remainder of a partially validated one.
+  backorderOfId Int?
+  backorderOf   Operation?  @relation("Backorder", fields: [backorderOfId], references: [id], onDelete: Restrict)
+  backorders    Operation[] @relation("Backorder")
 
   lines OperationLine[]
   moves StockMove[]
@@ -150,6 +154,7 @@ model Operation {
   @@index([type, status])
   @@index([status])
   @@index([scheduledDate])
+  @@index([backorderOfId])
 }
 
 model OperationLine {

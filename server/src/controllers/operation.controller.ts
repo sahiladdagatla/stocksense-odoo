@@ -8,6 +8,7 @@ import {
   operationCreate,
   operationQuery,
   operationUpdate,
+  validateBody,
 } from '../schemas/operation.schema.js';
 import * as lifecycle from '../services/operation.service.js';
 import * as docs from '../services/operation-doc.service.js';
@@ -39,7 +40,8 @@ export async function confirm(req: Request, res: Response) {
   res.json(await docs.getOperation(id(req)));
 }
 export async function validate(req: Request, res: Response) {
-  await stock.validateOperation(id(req), currentUser(req).id);
+  const { createBackorder } = parse(validateBody, req.body ?? {});
+  await stock.validateOperation(id(req), currentUser(req).id, { createBackorder });
   res.json(await docs.getOperation(id(req)));
 }
 export async function cancel(req: Request, res: Response) {

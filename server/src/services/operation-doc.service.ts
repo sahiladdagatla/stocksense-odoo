@@ -75,6 +75,8 @@ export async function getOperation(id: number) {
       sourceLoc: locSelect,
       destLoc: locSelect,
       createdBy: { select: { id: true, name: true, role: true } },
+      backorderOf: { select: { id: true, reference: true, status: true } },
+      backorders: { select: { id: true, reference: true, status: true }, orderBy: { id: 'asc' } },
       lines: {
         include: { product: { select: { id: true, name: true, sku: true, uom: true } } },
         orderBy: { id: 'asc' },

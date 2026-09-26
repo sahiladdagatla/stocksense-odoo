@@ -21,7 +21,11 @@ type LoadedOp = Operation & {
 };
 
 /** Options used by the seed to backdate history. Not exposed through the API. */
-export type EngineOptions = { at?: Date };
+export type EngineOptions = {
+  at?: Date;
+  /** Partial validation: create a follow-up document for the remaining quantity (default true). */
+  createBackorder?: boolean;
+};
 
 const lineQty = (l: OperationLine): Decimal => (l.doneQty.gt(0) ? l.doneQty : l.demandQty);
 
@@ -141,7 +145,46 @@ export async function validateOperationTx(
       createdAt: at,
     })),
   });
-  return tx.operation.update({ where: { id: op.id }, data: { status: 'DONE', validatedAt: at } });
+  const done = await tx.operation.update({
+    where: { id: op.id },
+    data: { status: 'DONE', validatedAt: at },
+  });
+
+  // Lines explicitly validated below their demand leave a remainder. Unless told otherwise, book
+  // that remainder as a backorder: same partner, route and type, linked back to this document.
+  const remaining = op.lines
+    .filter((l) => l.doneQty.gt(0) && l.doneQty.lt(l.demandQty))
+    .map((l) => ({ productId: l.productId, demandQty: l.demandQty.minus(l.doneQty) }));
+  if (remaining.length > 0 && opts.createBackorder !== false && op.type !== 'ADJUSTMENT') {
+    const internalSide = src.type === 'INTERNAL' ? src : dst;
+    // Internal locations always belong to a warehouse (enforced by a CHECK constraint).
+    if (!internalSide.warehouseId) throw new Error(`Location ${internalSide.id} has no warehouse`);
+    const warehouse = await tx.warehouse.findUniqueOrThrow({
+      where: { id: internalSide.warehouseId },
+      select: { code: true },
+    });
+    const backorder = await tx.operation.create({
+      data: {
+        reference: await nextOperationReference(tx, warehouse.code, op.type),
+        type: op.type,
+        status: 'DRAFT',
+        partner: op.partner,
+        sourceLocId: src.id,
+        destLocId: dst.id,
+        scheduledDate: op.scheduledDate,
+        createdById: userId,
+        createdAt: at,
+        notes: `Backorder of ${op.reference}`,
+        backorderOfId: op.id,
+        lines: { create: remaining },
+      },
+    });
+    // Already confirmed in spirit: ready if stock allows, otherwise waiting for it.
+    const status =
+      op.type === 'RECEIPT' || (await isAvailable(tx, backorder.id)) ? 'READY' : 'WAITING';
+    await tx.operation.update({ where: { id: backorder.id }, data: { status } });
+  }
+  return done;
 }
 
 /** Runs after a stock-changing transaction has committed. */
@@ -159,6 +202,11 @@ export async function validateOperation(
   opts: EngineOptions = {},
 ) {
   const op = await prisma.$transaction((tx) => validateOperationTx(tx, operationId, userId, opts));
+  const backorders = await prisma.operation.findMany({
+    where: { backorderOfId: operationId },
+    select: { id: true, type: true, status: true },
+  });
+  backorders.forEach((b) => emitOperationChanged(b));
   const lines = await prisma.operationLine.findMany({
     where: { operationId },
     select: { productId: true },
