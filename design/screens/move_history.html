@@ -1,0 +1,1201 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="web_dashboard" name="shell-type">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+@layer base {
+  html, body { margin: 0; padding: 0; }
+  body { overscroll-behavior: none; }
+  main > :first-child { margin-top: 0 !important; }
+  main > :last-child { margin-bottom: 0 !important; }
+}
+::-webkit-scrollbar { display: none; }
+</style>
+<script src="https://cdn.tailwindcss.com"></script>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      "colors": {
+        "surface": "#f8fafc",
+        "on-primary": "#ffffff",
+        "primary": "#094cb2",
+        "primary-container": "#3366cc",
+        "on-primary-container": "#e7ebff",
+        "secondary": "#475569",
+        "secondary-container": "#e2e8f0",
+        "on-secondary-container": "#1e293b",
+        "tertiary": "#0284c7",
+        "tertiary-container": "#0369a1",
+        "on-tertiary": "#ffffff",
+        "outline": "#64748b",
+        "outline-variant": "#cbd5e1",
+        "on-surface": "#0f172a",
+        "on-surface-variant": "#334155",
+        "surface-container-lowest": "#ffffff",
+        "surface-container-low": "#f8fafc",
+        "surface-container": "#f1f5f9",
+        "surface-container-high": "#e2e8f0",
+        "surface-container-highest": "#cbd5e1",
+        "error": "#ba1a1a",
+        "error-container": "#ffdad6",
+        "on-error": "#ffffff"
+      },
+      "borderRadius": {
+        "DEFAULT": "0.125rem",
+        "lg": "0.25rem",
+        "xl": "0.5rem",
+        "full": "0.75rem"
+      },
+      "spacing": {
+        "space-sm": "0.5rem",
+        "margin": "1rem",
+        "gutter": "1rem",
+        "space-xs": "0.25rem",
+        "space-xl": "2rem",
+        "space-md": "1rem",
+        "gutter-lg": "1.5rem",
+        "margin-lg": "2rem",
+        "space-lg": "1.5rem",
+        "margin-md": "1.5rem"
+      },
+      "fontFamily": {
+        "headline-md": ["Manrope", "sans-serif"],
+        "label-sm": ["Inter", "sans-serif"],
+        "headline-lg": ["Manrope", "sans-serif"],
+        "body-lg": ["Inter", "sans-serif"],
+        "body-sm": ["Inter", "sans-serif"],
+        "code-md": ["monospace"],
+        "label-md": ["Inter", "sans-serif"],
+        "body-md": ["Inter", "sans-serif"],
+        "headline-sm": ["Manrope", "sans-serif"],
+        "display-lg-mobile": ["Manrope", "sans-serif"],
+        "display-lg": ["Manrope", "sans-serif"]
+      },
+      "fontSize": {
+        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+        "headline-lg": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+        "code-md": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+        "label-md": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+        "body-md": ["15px", { "lineHeight": "22px", "fontWeight": "400" }],
+        "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+        "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+      }
+    }
+  }
+}
+</script>
+</head>
+<body class="bg-surface-container-lowest font-body-md text-on-surface antialiased">
+<header class="fixed top-0 left-0 right-0 h-16 bg-surface-container-lowest border-b border-outline-variant z-40 flex items-center px-space-md justify-between">
+<div class="flex items-center gap-space-sm w-[232px] shrink-0">
+<span class="font-headline-md text-headline-md tracking-tight font-bold text-[#094cb2]">stocksense</span>
+<span class="font-label-sm text-label-sm px-space-xs py-0.5 rounded-full bg-[#eff6ff] text-[#1d4ed8] border border-[#bfdbfe] font-medium">ERP</span>
+</div>
+<div class="flex-1 max-w-[480px] mx-space-md hidden md:block">
+<div class="relative flex items-center h-[38px] w-full bg-surface-container-lowest rounded-xl border border-outline-variant px-space-sm focus-within:border-[#3366cc]">
+<span class="material-symbols-outlined text-outline text-[18px] mr-space-xs shrink-0">search</span>
+<input class="w-full bg-transparent border-0 font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none" placeholder="Search products, SKUs, references…" type="text">
+</div>
+</div>
+<div class="flex items-center gap-space-md ml-auto">
+<button class="flex items-center gap-space-xs px-space-sm py-1.5 rounded-xl border border-outline-variant bg-surface-container-lowest hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-outline text-[18px]">warehouse</span>
+<span class="font-label-md text-label-md text-on-surface font-medium hidden sm:inline">WH1 · Main Warehouse</span>
+<span class="material-symbols-outlined text-outline text-[18px]">arrow_drop_down</span>
+</button>
+<div class="h-6 w-px bg-outline-variant hidden sm:block"></div>
+<div class="flex items-center gap-space-xs cursor-pointer group">
+<div class="w-9 h-9 rounded-xl bg-[#094cb2] flex items-center justify-center text-on-primary font-headline-sm text-headline-sm font-semibold shrink-0 shadow-sm">
+<span class="font-label-md text-label-md">PN</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-semibold hidden md:inline">Priya Nair</span>
+<span class="material-symbols-outlined text-outline text-[18px]">arrow_drop_down</span>
+</div>
+</div>
+</header>
+<aside class="fixed left-0 top-16 bottom-0 w-[248px] bg-surface-container-lowest border-r border-outline-variant z-30 flex flex-col justify-between overflow-y-auto">
+<div class="py-space-md flex flex-col">
+<div class="px-space-md mb-space-sm">
+<p class="font-label-sm text-label-sm uppercase font-semibold text-outline tracking-wider">Inventory App</p>
+</div>
+<nav class="flex flex-col">
+<a class="flex items-center px-space-md py-2.5 font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="dashboard" href="#">Dashboard</a>
+<a class="flex items-center px-space-md py-2.5 font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="products" href="#">Products</a>
+<div class="mt-space-sm pt-space-xs">
+<div class="px-space-md py-1 flex items-center justify-between text-outline cursor-default">
+<span class="font-label-sm text-label-sm uppercase font-semibold tracking-wider">Operations</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</div>
+<div class="flex flex-col">
+<a class="flex items-center pl-8 pr-space-md py-2 font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="receipts" href="#">Receipts</a>
+<a class="flex items-center pl-8 pr-space-md py-2 font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="delivery-orders" href="#">Delivery Orders</a>
+<a class="flex items-center pl-8 pr-space-md py-2 font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="internal-transfers" href="#">Internal Transfers</a>
+<a class="flex items-center pl-8 pr-space-md py-2 font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="adjustments" href="#">Adjustments</a>
+</div>
+</div>
+<div class="mt-space-sm pt-space-xs">
+<a aria-current="page" class="flex items-center px-space-md py-2.5 transition-colors bg-[#eff6ff] text-[#094cb2] border-l-[3px] border-[#094cb2] font-semibold" data-path="move-history" href="#">Move History</a>
+</div>
+<div class="mt-space-sm pt-space-xs">
+<div class="px-space-md py-1 flex items-center justify-between text-outline cursor-default">
+<span class="font-label-sm text-label-sm uppercase font-semibold tracking-wider">Settings</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</div>
+<div class="flex flex-col">
+<a class="flex items-center pl-8 pr-space-md py-2 font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="settings-warehouses-and-locations" href="#">Warehouses &amp; Locations</a>
+</div>
+</div>
+</nav>
+</div>
+<div class="p-space-md border-t border-outline-variant bg-surface-container-lowest">
+<div class="flex items-center gap-space-sm mb-space-sm">
+<div class="w-9 h-9 rounded-xl bg-[#094cb2] flex items-center justify-center text-on-primary font-headline-sm text-headline-sm font-semibold shrink-0 shadow-sm">
+<span class="font-label-md text-label-md">PN</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<p class="font-body-sm text-body-sm font-semibold text-on-surface truncate">Priya Nair</p>
+<p class="font-label-sm text-label-sm text-outline truncate">Inventory Manager</p>
+</div>
+</div>
+<div class="flex items-center justify-between pt-space-xs font-label-sm text-label-sm text-on-surface-variant">
+<a class="hover:text-[#094cb2] transition-colors" data-path="user-profile" href="#">My Profile</a>
+<span class="text-outline-variant">•</span>
+<a class="hover:text-error transition-colors" data-path="login" href="#">Logout</a>
+</div>
+</div>
+</aside>
+<div class="pl-[248px]">
+<div class="fixed top-16 left-[248px] right-0 h-10 bg-surface-container-lowest border-b border-outline-variant z-20 flex items-center px-space-lg">
+<nav class="flex items-center space-x-space-xs font-label-md text-label-md">
+<span class="text-on-surface-variant">Inventory</span>
+<span class="text-outline-variant">/</span>
+<a aria-current="page" class="transition-colors text-[#094cb2] font-semibold" data-path="move-history" href="#">Move History</a>
+</nav>
+</div>
+<main class="relative pt-16 min-h-screen bg-[#fafbfc] p-margin-lg"><div class="flex flex-col w-full">
+<!-- Top Meta / Integrity Stats Overview -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-lg">
+<div>
+<div class="flex items-center gap-space-xs mb-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Ledger &amp; Governance</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-code-md text-code-md text-[#094cb2] font-semibold">BLOCK #849102</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-[#0f172a] font-bold tracking-tight">Move History</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Append-only immutable ledger of every stock transaction and valuation delta.</p>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-space-sm shrink-0">
+<button class="h-[38px] px-space-md rounded-xl bg-[#094cb2] hover:bg-[#073d91] text-white font-label-md text-label-md flex items-center gap-space-xs transition-colors shadow-sm" id="integrityBtn" onclick="runIntegrityCheck()" type="button">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span>Run integrity check</span>
+</button>
+<button class="h-[38px] px-space-md rounded-xl bg-surface-container-lowest hover:bg-surface-container border border-outline-variant text-on-surface font-label-md text-label-md flex items-center gap-space-xs transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px] text-outline">file_download</span>
+<span>Export CSV</span>
+</button>
+<div class="relative">
+<button class="h-[38px] w-[38px] rounded-xl bg-surface-container-lowest hover:bg-surface-container border border-outline-variant text-outline hover:text-on-surface flex items-center justify-center transition-colors shadow-sm" title="Ledger Settings" type="button">
+<span class="material-symbols-outlined text-[19px]">tune</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Success / Integrity Alert Banner -->
+<div class="rounded-xl p-space-md mb-space-lg flex items-center justify-between transition-all duration-300 border border-[#bbf7d0]" id="integrityBanner" style="background-color: #f0fdf4; color: #166534;">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style="background-color: rgba(22, 101, 52, 0.12);">
+<span class="material-symbols-outlined text-[20px]" style="color: #166534;">check_circle</span>
+</div>
+<div class="min-w-0">
+<span class="font-label-md text-label-md font-semibold tracking-tight" style="color: #166534;">
+          Ledger balanced · 1,942 moves verified · 0 discrepancies · checked just now
+        </span>
+<span class="hidden lg:inline text-label-sm font-label-sm ml-2 opacity-80" style="color: #166534;">
+          SHA-256 state root: <span class="font-code-md font-semibold">9f8e…b3c1</span> (Zero anomalies detected across WH1, WH2 &amp; In-transit)
+        </span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm shrink-0 pl-2">
+<span class="font-code-md text-code-md px-2 py-0.5 rounded-full font-bold uppercase tracking-wider text-[11px]" style="background-color: #166534; color: #ffffff;">
+        Audit log clean
+      </span>
+<span class="font-code-md text-code-md text-label-sm hidden sm:inline" style="color: #166534;">Block #849102</span>
+</div>
+</div>
+<!-- Filter Toolbar Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md mb-space-lg shadow-sm border border-outline-variant">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-space-sm items-center">
+<!-- Date Range -->
+<div class="relative lg:col-span-2">
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 font-medium">Timeline Window</label>
+<div class="relative flex items-center h-[38px] bg-surface-container-lowest rounded-xl px-space-sm border border-outline-variant focus-within:border-[#3366cc]">
+<span class="material-symbols-outlined text-outline text-[18px] mr-2">calendar_today</span>
+<select class="w-full bg-transparent font-label-md text-label-md text-on-surface focus:outline-none appearance-none cursor-pointer pr-6">
+<option>Last 30 Days (Oct 1 – Oct 31, 2024)</option>
+<option>Current Fiscal Q4 (Oct – Dec 2024)</option>
+<option>Today (Oct 24, 2024)</option>
+<option>Previous 7 Days</option>
+<option>Custom Date Range…</option>
+</select>
+<span class="material-symbols-outlined text-outline text-[16px] absolute right-2.5 pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Product Dropdown -->
+<div class="relative">
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 font-medium">Product / SKU</label>
+<div class="relative flex items-center h-[38px] bg-surface-container-lowest rounded-xl px-space-sm border border-outline-variant focus-within:border-[#3366cc]">
+<span class="material-symbols-outlined text-outline text-[18px] mr-1.5">inventory_2</span>
+<select class="w-full bg-transparent font-label-md text-label-md text-on-surface focus:outline-none appearance-none cursor-pointer pr-5 truncate">
+<option>All Products (284)</option>
+<option>Steel Rods 12mm (STL-ROD-12)</option>
+<option>Ergonomic Chair V2 (CHR-ERG-02)</option>
+<option>Industrial Lubricant (LUB-IND-05)</option>
+<option>Hex Bolts M8 x 40 (BLT-HEX-08)</option>
+<option>Copper Pipes 15mm (CPR-PIP-15)</option>
+</select>
+<span class="material-symbols-outlined text-outline text-[16px] absolute right-2 pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Location Selector -->
+<div class="relative">
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 font-medium">Location</label>
+<div class="relative flex items-center h-[38px] bg-surface-container-lowest rounded-xl px-space-sm border border-outline-variant focus-within:border-[#3366cc]">
+<span class="material-symbols-outlined text-outline text-[18px] mr-1.5">warehouse</span>
+<select class="w-full bg-transparent font-label-md text-label-md text-on-surface focus:outline-none appearance-none cursor-pointer pr-5 truncate">
+<option>All Locations (WH1, WH2, Ext)</option>
+<option>WH1/Stock/Rack A</option>
+<option>WH1/Stock/Rack B</option>
+<option>WH1/Production Floor</option>
+<option>WH2/Stock/Zone B</option>
+<option>Vendors (Virtual)</option>
+<option>Customers (Virtual)</option>
+</select>
+<span class="material-symbols-outlined text-outline text-[16px] absolute right-2 pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Operation Type -->
+<div class="relative">
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 font-medium">Operation Type</label>
+<div class="relative flex items-center h-[38px] bg-surface-container-lowest rounded-xl px-space-sm border border-outline-variant focus-within:border-[#3366cc]">
+<span class="material-symbols-outlined text-outline text-[18px] mr-1.5">swap_horizontal_circle</span>
+<select class="w-full bg-transparent font-label-md text-label-md text-on-surface focus:outline-none appearance-none cursor-pointer pr-5 truncate">
+<option>All Types (All Ops)</option>
+<option>Receipts (Inbound)</option>
+<option>Delivery Orders (Outbound)</option>
+<option>Internal Transfers</option>
+<option>Inventory Adjustments</option>
+</select>
+<span class="material-symbols-outlined text-outline text-[16px] absolute right-2 pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Operator Filter -->
+<div class="relative">
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 font-medium">Authorized By</label>
+<div class="relative flex items-center h-[38px] bg-surface-container-lowest rounded-xl px-space-sm border border-outline-variant focus-within:border-[#3366cc]">
+<span class="material-symbols-outlined text-outline text-[18px] mr-1.5">person</span>
+<select class="w-full bg-transparent font-label-md text-label-md text-on-surface focus:outline-none appearance-none cursor-pointer pr-5 truncate">
+<option>All Operators (14)</option>
+<option>Priya Nair (Manager)</option>
+<option>Rahul Patil (Floor Sup.)</option>
+<option>Vikram Sen (Logistics)</option>
+<option>Anita Roy (QC Dispatch)</option>
+<option>System (Automated sync)</option>
+</select>
+<span class="material-symbols-outlined text-outline text-[16px] absolute right-2 pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Quick Search bar inside filter card -->
+<div class="mt-space-sm pt-space-xs flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+<div class="relative flex-1 w-full max-w-xl">
+<span class="material-symbols-outlined text-outline text-[18px] absolute left-3 top-1/2 -translate-y-1/2">filter_alt</span>
+<input class="w-full pl-9 pr-8 h-[36px] bg-surface border border-outline-variant rounded-xl font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-[#3366cc] focus:bg-surface-container-lowest transition-colors" id="ledgerSearchInput" oninput="filterLedger(this.value)" placeholder="Filter current view by reference (e.g. REC-2024), SKU, product, or location…" type="text">
+<button class="absolute right-2.5 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface p-0.5" onclick="clearLedgerSearch()" title="Clear search" type="button">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<!-- Active filter pills / indicators -->
+<div class="flex items-center gap-space-xs self-start sm:self-auto overflow-x-auto">
+<span class="font-label-sm text-label-sm text-outline px-1">Active:</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#eff6ff] border border-[#bfdbfe] font-label-sm text-label-sm text-[#1e40af]">
+<span>Date: Last 30D</span>
+<span class="material-symbols-outlined text-[14px] cursor-pointer hover:text-error">close</span>
+</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#eff6ff] border border-[#bfdbfe] font-label-sm text-label-sm text-[#1e40af]">
+<span>Status: Validated</span>
+<span class="material-symbols-outlined text-[14px] cursor-pointer hover:text-error">close</span>
+</span>
+<button class="font-label-sm text-label-sm text-[#094cb2] hover:underline ml-1 font-semibold" type="button">Reset all</button>
+</div>
+</div>
+</div>
+<!-- Movement History Ledger Table (Main Card) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden mb-space-lg">
+<!-- Alexandria Cobalt Navy Gradient Header -->
+<div class="px-space-lg py-space-md flex flex-wrap items-center justify-between gap-space-sm" style="background: linear-gradient(135deg, #094cb2 0%, #1e293b 100%);">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-white font-bold tracking-tight">Audit Trail &amp; Stock Ledger</h2>
+<p class="font-label-sm text-label-sm text-white/80">Tamper-evident continuous sequence · Serialized execution</p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-code-md text-code-md px-3 py-1 rounded-full bg-white/15 text-white font-medium">
+          Showing 15 of 1,942 movements
+        </span>
+<button class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors" onclick="refreshLedgerView()" title="Sync live ledger" type="button">
+<span class="material-symbols-outlined text-[18px]">sync</span>
+</button>
+</div>
+</div>
+<!-- Data Table Container -->
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse" id="movesLedgerTable">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider h-10 select-none border-b border-outline-variant">
+<th class="py-2.5 px-space-md font-semibold text-outline">Timestamp (UTC)</th>
+<th class="py-2.5 px-space-md font-semibold text-outline">Reference</th>
+<th class="py-2.5 px-space-md font-semibold text-outline">Type</th>
+<th class="py-2.5 px-space-md font-semibold text-outline">Product &amp; SKU</th>
+<th class="py-2.5 px-space-md font-semibold text-outline text-right">Qty &amp; Unit</th>
+<th class="py-2.5 px-space-md font-semibold text-outline">From → To Route</th>
+<th class="py-2.5 px-space-md font-semibold text-outline">Operator</th>
+<th class="py-2.5 px-space-sm font-semibold text-outline text-center w-12">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant font-body-sm text-body-sm text-on-surface">
+<!-- Row 1: Receipt -->
+<tr class="ledger-row hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md text-on-surface-variant">
+              2024-10-24 <span class="text-on-surface font-semibold">14:32:08</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md">
+<a class="font-semibold text-[#094cb2] hover:text-[#002d75] hover:underline flex items-center gap-1" href="#">
+<span>REC-2024-0891</span>
+<span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</a>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase font-code-md bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span>
+<span>Receipt</span>
+</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Steel Rods 12mm High-Tensile</span>
+<span class="font-code-md text-code-md text-outline">STL-ROD-12</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right whitespace-nowrap font-code-md text-code-md font-bold text-emerald-600">
+              +150 kg
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="italic text-on-surface-variant">Vendors (Jindal Steel Co.)</span>
+<span class="material-symbols-outlined text-[14px] text-outline">trending_flat</span>
+<span class="font-medium">WH1/Receiving Dock</span>
+</div>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full flex items-center justify-center font-label-sm text-[10px] font-bold text-white bg-[#094cb2]">
+                  PN
+                </div>
+<span class="font-label-md text-label-md font-medium text-on-surface">Priya Nair</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-center">
+<button class="p-1 rounded-xl text-outline hover:text-[#094cb2] hover:bg-surface-container-high transition-colors" title="Inspect snapshot">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Delivery Order -->
+<tr class="ledger-row hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md text-on-surface-variant">
+              2024-10-24 <span class="text-on-surface font-semibold">13:19:42</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md">
+<a class="font-semibold text-[#094cb2] hover:text-[#002d75] hover:underline flex items-center gap-1" href="#">
+<span>DO-2024-0412</span>
+<span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</a>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase font-code-md bg-blue-50 text-blue-700 border border-blue-200">
+<span class="material-symbols-outlined text-[14px]">local_shipping</span>
+<span>Delivery</span>
+</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Ergonomic Office Chair V2</span>
+<span class="font-code-md text-code-md text-outline">CHR-ERG-02</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right whitespace-nowrap font-code-md text-code-md font-bold text-rose-600">
+              −25 units
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="font-medium">WH1/Stock/Rack A</span>
+<span class="material-symbols-outlined text-[14px] text-outline">trending_flat</span>
+<span class="italic text-on-surface-variant">Customers (Apex Tech Hub)</span>
+</div>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full flex items-center justify-center font-label-sm text-[10px] font-bold text-white bg-slate-600">
+                  RP
+                </div>
+<span class="font-label-md text-label-md font-medium text-on-surface">Rahul Patil</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-center">
+<button class="p-1 rounded-xl text-outline hover:text-[#094cb2] hover:bg-surface-container-high transition-colors" title="Inspect snapshot">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Internal Transfer -->
+<tr class="ledger-row hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md text-on-surface-variant">
+              2024-10-24 <span class="text-on-surface font-semibold">11:45:10</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md">
+<a class="font-semibold text-[#094cb2] hover:text-[#002d75] hover:underline flex items-center gap-1" href="#">
+<span>TR-2024-0193</span>
+<span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</a>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase font-code-md bg-indigo-50 text-indigo-700 border border-indigo-200">
+<span class="material-symbols-outlined text-[14px]">sync_alt</span>
+<span>Transfer</span>
+</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Industrial Lubricant 5L Drum</span>
+<span class="font-code-md text-code-md text-outline">LUB-IND-05</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right whitespace-nowrap font-code-md text-code-md font-semibold text-on-surface">
+              120 units
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="font-medium">WH1/Receiving Dock</span>
+<span class="material-symbols-outlined text-[14px] text-outline">trending_flat</span>
+<span class="font-medium">WH1/Stock/Zone C</span>
+</div>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full flex items-center justify-center font-label-sm text-[10px] font-bold text-white bg-slate-500">
+                  VS
+                </div>
+<span class="font-label-md text-label-md font-medium text-on-surface">Vikram Sen</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-center">
+<button class="p-1 rounded-xl text-outline hover:text-[#094cb2] hover:bg-surface-container-high transition-colors" title="Inspect snapshot">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: Adjustment -->
+<tr class="ledger-row hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md text-on-surface-variant">
+              2024-10-24 <span class="text-on-surface font-semibold">10:04:19</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md">
+<a class="font-semibold text-[#094cb2] hover:text-[#002d75] hover:underline flex items-center gap-1" href="#">
+<span>ADJ-2024-0054</span>
+<span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</a>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase font-code-md bg-amber-50 text-amber-700 border border-amber-200">
+<span class="material-symbols-outlined text-[14px]">balance</span>
+<span>Adjustment</span>
+</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Hex Bolts M8 x 40 Zinc Plated</span>
+<span class="font-code-md text-code-md text-outline">BLT-HEX-08</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right whitespace-nowrap font-code-md text-code-md font-bold text-rose-600">
+              −50 pcs
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="font-medium">WH1/Stock/Rack B</span>
+<span class="material-symbols-outlined text-[14px] text-outline">trending_flat</span>
+<span class="italic text-on-surface-variant">Inventory Loss (Scrap / Damage)</span>
+</div>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full flex items-center justify-center font-label-sm text-[10px] font-bold text-white bg-[#094cb2]">
+                  PN
+                </div>
+<span class="font-label-md text-label-md font-medium text-on-surface">Priya Nair</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-center">
+<button class="p-1 rounded-xl text-outline hover:text-[#094cb2] hover:bg-surface-container-high transition-colors" title="Inspect snapshot">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 5: Receipt -->
+<tr class="ledger-row hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md text-on-surface-variant">
+              2024-10-24 <span class="text-on-surface font-semibold">09:12:55</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md">
+<a class="font-semibold text-[#094cb2] hover:text-[#002d75] hover:underline flex items-center gap-1" href="#">
+<span>REC-2024-0890</span>
+<span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</a>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase font-code-md bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span>
+<span>Receipt</span>
+</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Aluminum Sheet 2mm (4x8 ft)</span>
+<span class="font-code-md text-code-md text-outline">SHT-ALU-02</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right whitespace-nowrap font-code-md text-code-md font-bold text-emerald-600">
+              +40 units
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="italic text-on-surface-variant">Vendors (Hindalco Industries)</span>
+<span class="material-symbols-outlined text-[14px] text-outline">trending_flat</span>
+<span class="font-medium">WH1/Receiving Dock</span>
+</div>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full flex items-center justify-center font-label-sm text-[10px] font-bold text-white bg-slate-600">
+                  AR
+                </div>
+<span class="font-label-md text-label-md font-medium text-on-surface">Anita Roy</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-center">
+<button class="p-1 rounded-xl text-outline hover:text-[#094cb2] hover:bg-surface-container-high transition-colors" title="Inspect snapshot">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 6: Delivery Order -->
+<tr class="ledger-row hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md text-on-surface-variant">
+              2024-10-23 <span class="text-on-surface font-semibold">17:50:22</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md">
+<a class="font-semibold text-[#094cb2] hover:text-[#002d75] hover:underline flex items-center gap-1" href="#">
+<span>DO-2024-0411</span>
+<span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</a>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase font-code-md bg-blue-50 text-blue-700 border border-blue-200">
+<span class="material-symbols-outlined text-[14px]">local_shipping</span>
+<span>Delivery</span>
+</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Copper Pipes 15mm Seamless</span>
+<span class="font-code-md text-code-md text-outline">CPR-PIP-15</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right whitespace-nowrap font-code-md text-code-md font-bold text-rose-600">
+              −80 m
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="font-medium">WH1/Stock/Zone D</span>
+<span class="material-symbols-outlined text-[14px] text-outline">trending_flat</span>
+<span class="italic text-on-surface-variant">Customers (Voltas HVAC Ltd)</span>
+</div>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full flex items-center justify-center font-label-sm text-[10px] font-bold text-white bg-slate-500">
+                  VS
+                </div>
+<span class="font-label-md text-label-md font-medium text-on-surface">Vikram Sen</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-center">
+<button class="p-1 rounded-xl text-outline hover:text-[#094cb2] hover:bg-surface-container-high transition-colors" title="Inspect snapshot">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 7: Internal Transfer Inter-Warehouse -->
+<tr class="ledger-row hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md text-on-surface-variant">
+              2024-10-23 <span class="text-on-surface font-semibold">16:15:33</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md">
+<a class="font-semibold text-[#094cb2] hover:text-[#002d75] hover:underline flex items-center gap-1" href="#">
+<span>TR-2024-0192</span>
+<span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</a>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase font-code-md bg-indigo-50 text-indigo-700 border border-indigo-200">
+<span class="material-symbols-outlined text-[14px]">sync_alt</span>
+<span>Transfer</span>
+</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Thermal Insulation Foam 10mm</span>
+<span class="font-code-md text-code-md text-outline">INS-THM-10</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right whitespace-nowrap font-code-md text-code-md font-semibold text-on-surface">
+              65 rolls
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="font-medium">WH1/Stock/Rack A</span>
+<span class="material-symbols-outlined text-[14px] text-outline">trending_flat</span>
+<span class="font-medium">WH2/Stock/Zone B</span>
+</div>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full flex items-center justify-center font-label-sm text-[10px] font-bold text-white bg-slate-600">
+                  RP
+                </div>
+<span class="font-label-md text-label-md font-medium text-on-surface">Rahul Patil</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-center">
+<button class="p-1 rounded-xl text-outline hover:text-[#094cb2] hover:bg-surface-container-high transition-colors" title="Inspect snapshot">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 8: Adjustment Positive -->
+<tr class="ledger-row hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md text-on-surface-variant">
+              2024-10-23 <span class="text-on-surface font-semibold">14:02:11</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md">
+<a class="font-semibold text-[#094cb2] hover:text-[#002d75] hover:underline flex items-center gap-1" href="#">
+<span>ADJ-2024-0053</span>
+<span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</a>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase font-code-md bg-amber-50 text-amber-700 border border-amber-200">
+<span class="material-symbols-outlined text-[14px]">balance</span>
+<span>Adjustment</span>
+</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Nylon Cable Ties 300mm</span>
+<span class="font-code-md text-code-md text-outline">CBL-TIE-30</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right whitespace-nowrap font-code-md text-code-md font-bold text-emerald-600">
+              +1,200 pcs
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="italic text-on-surface-variant">Physical Count Adjustment</span>
+<span class="material-symbols-outlined text-[14px] text-outline">trending_flat</span>
+<span class="font-medium">WH1/Stock/Rack B</span>
+</div>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full flex items-center justify-center font-label-sm text-[10px] font-bold text-white bg-[#094cb2]">
+                  PN
+                </div>
+<span class="font-label-md text-label-md font-medium text-on-surface">Priya Nair</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-center">
+<button class="p-1 rounded-xl text-outline hover:text-[#094cb2] hover:bg-surface-container-high transition-colors" title="Inspect snapshot">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 9: Receipt -->
+<tr class="ledger-row hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md text-on-surface-variant">
+              2024-10-23 <span class="text-on-surface font-semibold">10:30:45</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md">
+<a class="font-semibold text-[#094cb2] hover:text-[#002d75] hover:underline flex items-center gap-1" href="#">
+<span>REC-2024-0889</span>
+<span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</a>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase font-code-md bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span>
+<span>Receipt</span>
+</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Polyurethane Coating 20L</span>
+<span class="font-code-md text-code-md text-outline">PNT-PLY-20</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right whitespace-nowrap font-code-md text-code-md font-bold text-emerald-600">
+              +18 pails
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="italic text-on-surface-variant">Vendors (Asian Paints Industrial)</span>
+<span class="material-symbols-outlined text-[14px] text-outline">trending_flat</span>
+<span class="font-medium">WH1/Receiving Dock</span>
+</div>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full flex items-center justify-center font-label-sm text-[10px] font-bold text-white bg-[#0369a1]">
+                  TS
+                </div>
+<span class="font-label-md text-label-md font-medium text-on-surface">Tata Steel Rep</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-center">
+<button class="p-1 rounded-xl text-outline hover:text-[#094cb2] hover:bg-surface-container-high transition-colors" title="Inspect snapshot">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 10: Delivery Order -->
+<tr class="ledger-row hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md text-on-surface-variant">
+              2024-10-22 <span class="text-on-surface font-semibold">18:22:04</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md">
+<a class="font-semibold text-[#094cb2] hover:text-[#002d75] hover:underline flex items-center gap-1" href="#">
+<span>DO-2024-0410</span>
+<span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</a>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase font-code-md bg-blue-50 text-blue-700 border border-blue-200">
+<span class="material-symbols-outlined text-[14px]">local_shipping</span>
+<span>Delivery</span>
+</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Heavy Duty Castor Wheels 6"</span>
+<span class="font-code-md text-code-md text-outline">WHL-CST-06</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right whitespace-nowrap font-code-md text-code-md font-bold text-rose-600">
+              −60 pcs
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="font-medium">WH1/Packing</span>
+<span class="material-symbols-outlined text-[14px] text-outline">trending_flat</span>
+<span class="italic text-on-surface-variant">Customers (Godrej Logistics)</span>
+</div>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full flex items-center justify-center font-label-sm text-[10px] font-bold text-white bg-slate-600">
+                  AR
+                </div>
+<span class="font-label-md text-label-md font-medium text-on-surface">Anita Roy</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-center">
+<button class="p-1 rounded-xl text-outline hover:text-[#094cb2] hover:bg-surface-container-high transition-colors" title="Inspect snapshot">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 11: Production Transfer -->
+<tr class="ledger-row hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md text-on-surface-variant">
+              2024-10-22 <span class="text-on-surface font-semibold">15:10:18</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md">
+<a class="font-semibold text-[#094cb2] hover:text-[#002d75] hover:underline flex items-center gap-1" href="#">
+<span>TR-2024-0191</span>
+<span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</a>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase font-code-md bg-indigo-50 text-indigo-700 border border-indigo-200">
+<span class="material-symbols-outlined text-[14px]">sync_alt</span>
+<span>Transfer</span>
+</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Steel Rods 12mm High-Tensile</span>
+<span class="font-code-md text-code-md text-outline">STL-ROD-12</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right whitespace-nowrap font-code-md text-code-md font-semibold text-on-surface">
+              85 kg
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="font-medium">WH1/Receiving Dock</span>
+<span class="material-symbols-outlined text-[14px] text-outline">trending_flat</span>
+<span class="font-medium">WH1/Production Floor</span>
+</div>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full flex items-center justify-center font-label-sm text-[10px] font-bold text-white bg-slate-600">
+                  RP
+                </div>
+<span class="font-label-md text-label-md font-medium text-on-surface">Rahul Patil</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-center">
+<button class="p-1 rounded-xl text-outline hover:text-[#094cb2] hover:bg-surface-container-high transition-colors" title="Inspect snapshot">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 12: Adjustment Negative (Scrap) -->
+<tr class="ledger-row hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md text-on-surface-variant">
+              2024-10-22 <span class="text-on-surface font-semibold">11:08:44</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md">
+<a class="font-semibold text-[#094cb2] hover:text-[#002d75] hover:underline flex items-center gap-1" href="#">
+<span>ADJ-2024-0052</span>
+<span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</a>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase font-code-md bg-amber-50 text-amber-700 border border-amber-200">
+<span class="material-symbols-outlined text-[14px]">balance</span>
+<span>Adjustment</span>
+</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Industrial Lubricant 5L Drum</span>
+<span class="font-code-md text-code-md text-outline">LUB-IND-05</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right whitespace-nowrap font-code-md text-code-md font-bold text-rose-600">
+              −3 units
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="font-medium">WH1/Stock/Zone C</span>
+<span class="material-symbols-outlined text-[14px] text-outline">trending_flat</span>
+<span class="italic text-on-surface-variant">Inventory Loss (Puncture / Spillage)</span>
+</div>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full flex items-center justify-center font-label-sm text-[10px] font-bold text-white bg-[#094cb2]">
+                  PN
+                </div>
+<span class="font-label-md text-label-md font-medium text-on-surface">Priya Nair</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-center">
+<button class="p-1 rounded-xl text-outline hover:text-[#094cb2] hover:bg-surface-container-high transition-colors" title="Inspect snapshot">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 13: Receipt -->
+<tr class="ledger-row hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md text-on-surface-variant">
+              2024-10-21 <span class="text-on-surface font-semibold">16:40:02</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md">
+<a class="font-semibold text-[#094cb2] hover:text-[#002d75] hover:underline flex items-center gap-1" href="#">
+<span>REC-2024-0888</span>
+<span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</a>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase font-code-md bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span>
+<span>Receipt</span>
+</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Precision Ball Bearings 6204</span>
+<span class="font-code-md text-code-md text-outline">BRG-SKF-6204</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right whitespace-nowrap font-code-md text-code-md font-bold text-emerald-600">
+              +500 pcs
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="italic text-on-surface-variant">Vendors (SKF India)</span>
+<span class="material-symbols-outlined text-[14px] text-outline">trending_flat</span>
+<span class="font-medium">WH1/Receiving Dock</span>
+</div>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full flex items-center justify-center font-label-sm text-[10px] font-bold text-white bg-slate-500">
+                  VS
+                </div>
+<span class="font-label-md text-label-md font-medium text-on-surface">Vikram Sen</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-center">
+<button class="p-1 rounded-xl text-outline hover:text-[#094cb2] hover:bg-surface-container-high transition-colors" title="Inspect snapshot">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 14: Delivery Order -->
+<tr class="ledger-row hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md text-on-surface-variant">
+              2024-10-21 <span class="text-on-surface font-semibold">14:15:30</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md">
+<a class="font-semibold text-[#094cb2] hover:text-[#002d75] hover:underline flex items-center gap-1" href="#">
+<span>DO-2024-0409</span>
+<span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</a>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase font-code-md bg-blue-50 text-blue-700 border border-blue-200">
+<span class="material-symbols-outlined text-[14px]">local_shipping</span>
+<span>Delivery</span>
+</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Ergonomic Office Chair V2</span>
+<span class="font-code-md text-code-md text-outline">CHR-ERG-02</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right whitespace-nowrap font-code-md text-code-md font-bold text-rose-600">
+              −15 units
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="font-medium">WH1/Packing</span>
+<span class="material-symbols-outlined text-[14px] text-outline">trending_flat</span>
+<span class="italic text-on-surface-variant">Customers (WeWork Enclave)</span>
+</div>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full flex items-center justify-center font-label-sm text-[10px] font-bold text-white bg-slate-600">
+                  AR
+                </div>
+<span class="font-label-md text-label-md font-medium text-on-surface">Anita Roy</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-center">
+<button class="p-1 rounded-xl text-outline hover:text-[#094cb2] hover:bg-surface-container-high transition-colors" title="Inspect snapshot">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 15: Internal Transfer -->
+<tr class="ledger-row hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md text-on-surface-variant">
+              2024-10-21 <span class="text-on-surface font-semibold">09:55:12</span>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap font-code-md text-code-md">
+<a class="font-semibold text-[#094cb2] hover:text-[#002d75] hover:underline flex items-center gap-1" href="#">
+<span>TR-2024-0190</span>
+<span class="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</a>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase font-code-md bg-indigo-50 text-indigo-700 border border-indigo-200">
+<span class="material-symbols-outlined text-[14px]">sync_alt</span>
+<span>Transfer</span>
+</span>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Hex Bolts M8 x 40 Zinc Plated</span>
+<span class="font-code-md text-code-md text-outline">BLT-HEX-08</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right whitespace-nowrap font-code-md text-code-md font-semibold text-on-surface">
+              3,000 pcs
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="font-medium">WH1/Receiving Dock</span>
+<span class="material-symbols-outlined text-[14px] text-outline">trending_flat</span>
+<span class="font-medium">WH1/Stock/Rack B</span>
+</div>
+</td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full flex items-center justify-center font-label-sm text-[10px] font-bold text-white bg-slate-600">
+                  RP
+                </div>
+<span class="font-label-md text-label-md font-medium text-on-surface">Rahul Patil</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-center">
+<button class="p-1 rounded-xl text-outline hover:text-[#094cb2] hover:bg-surface-container-high transition-colors" title="Inspect snapshot">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination Bar -->
+<div class="px-space-md py-space-sm bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-space-sm select-none border-t border-outline-variant">
+<div class="flex items-center gap-space-md">
+<span class="font-label-md text-label-md text-on-surface-variant font-medium">
+          Showing <span class="font-semibold text-on-surface">1–15</span> of <span class="font-semibold text-on-surface">1,942</span> records
+        </span>
+<div class="flex items-center gap-1 text-label-sm font-label-sm text-outline">
+<span>Rows per page:</span>
+<select class="bg-surface-container-lowest border border-outline-variant rounded-md px-1.5 py-0.5 font-label-sm text-on-surface focus:outline-none cursor-pointer">
+<option>15</option>
+<option>50</option>
+<option>100</option>
+</select>
+</div>
+</div>
+<!-- Pagination Nav Controls -->
+<div class="flex items-center gap-1">
+<button class="h-8 px-2 rounded-xl bg-surface-container-lowest border border-outline-variant text-outline hover:text-on-surface disabled:opacity-40 transition-colors flex items-center justify-center" disabled="" title="Previous page">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="h-8 w-8 rounded-xl font-label-md text-label-md font-semibold text-white bg-[#094cb2] hover:bg-[#073d91] flex items-center justify-center shadow-sm transition-colors">
+          1
+        </button>
+<button class="h-8 w-8 rounded-xl font-label-md text-label-md font-medium bg-surface-container-lowest border border-outline-variant hover:bg-surface-container text-on-surface flex items-center justify-center transition-colors">
+          2
+        </button>
+<button class="h-8 w-8 rounded-xl font-label-md text-label-md font-medium bg-surface-container-lowest border border-outline-variant hover:bg-surface-container text-on-surface flex items-center justify-center transition-colors">
+          3
+        </button>
+<span class="px-1 text-outline font-label-md">…</span>
+<button class="h-8 w-8 rounded-xl font-label-md text-label-md font-medium bg-surface-container-lowest border border-outline-variant hover:bg-surface-container text-on-surface flex items-center justify-center transition-colors">
+          130
+        </button>
+<button class="h-8 px-2 rounded-xl bg-surface-container-lowest border border-outline-variant hover:bg-surface-container text-on-surface transition-colors flex items-center justify-center" title="Next page">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Operational Context Notice Card -->
+<div class="rounded-xl p-space-md bg-surface-container-low border border-outline-variant flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md shadow-sm">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-xl bg-[#094cb2] text-white flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[22px]">policy</span>
+</div>
+<div>
+<p class="font-headline-sm text-[15px] font-semibold text-[#094cb2]">Append-Only Architectural Guarantee</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Historical move rows cannot be edited, purged, or backdated. Corrections require an explicit counter-balancing adjustment transaction approved by a Level 2 Inventory Controller.
+        </p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm shrink-0">
+<a class="font-label-md text-label-md font-semibold text-[#094cb2] hover:text-[#002d75] hover:underline flex items-center gap-1" href="#">
+<span>View Valuation Accounting Sync</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+<script>
+    function filterLedger(query) {
+      const q = (query || '').toLowerCase().trim();
+      const rows = document.querySelectorAll('#movesLedgerTable tbody tr.ledger-row');
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        if (!q || text.includes(q)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    function clearLedgerSearch() {
+      const input = document.getElementById('ledgerSearchInput');
+      if (input) {
+        input.value = '';
+        filterLedger('');
+        input.focus();
+      }
+    }
+
+    function runIntegrityCheck() {
+      const btn = document.getElementById('integrityBtn');
+      const banner = document.getElementById('integrityBanner');
+      if (!btn) return;
+      
+      const originalHtml = btn.innerHTML;
+      btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span><span>Verifying hashes…</span>';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        btn.innerHTML = originalHtml;
+        btn.disabled = false;
+        if (banner) {
+          banner.classList.add('scale-[1.01]');
+          setTimeout(() => banner.classList.remove('scale-[1.01]'), 250);
+        }
+      }, 700);
+    }
+
+    function refreshLedgerView() {
+      const banner = document.getElementById('integrityBanner');
+      if (banner) {
+        banner.style.opacity = '0.5';
+        setTimeout(() => { banner.style.opacity = '1'; }, 300);
+      }
+    }
+  </script>
+</div></main>
+</div>
+</body></html>

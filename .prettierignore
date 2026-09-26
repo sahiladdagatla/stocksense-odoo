@@ -4,3 +4,4 @@ coverage
 .pgdata
 package-lock.json
 server/prisma/migrations
+design

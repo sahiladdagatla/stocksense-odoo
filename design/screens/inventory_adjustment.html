@@ -1,0 +1,617 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="web_dashboard" name="shell-type">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+@layer base {
+  html, body { margin: 0; padding: 0; }
+  body { overscroll-behavior: none; }
+  main > :first-child { margin-top: 0 !important; }
+  main > :last-child { margin-bottom: 0 !important; }
+}
+::-webkit-scrollbar { display: none; }
+</style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      "colors": {
+        "primary": "#3366cc",
+        "primary-hover": "#2554a8",
+        "primary-dark": "#1e4287",
+        "primary-container": "#3366cc",
+        "on-primary": "#ffffff",
+        "on-primary-container": "#f0f4fc",
+        "primary-fixed": "#d9e4ff",
+        "primary-fixed-dim": "#b5ccfc",
+        "on-primary-fixed": "#0a2254",
+        "on-primary-fixed-variant": "#1d4791",
+        "secondary": "#4b5e7d",
+        "secondary-container": "#e1e9f5",
+        "on-secondary": "#ffffff",
+        "on-secondary-container": "#2f3e55",
+        "secondary-fixed": "#e0e8f6",
+        "secondary-fixed-dim": "#c2d1e8",
+        "tertiary": "#0e7490",
+        "tertiary-container": "#08657e",
+        "on-tertiary": "#ffffff",
+        "on-tertiary-container": "#e0f7fa",
+        "tertiary-fixed": "#cffafe",
+        "tertiary-fixed-dim": "#67e8f9",
+        "background": "#f8fafc",
+        "surface": "#f8fafc",
+        "surface-bright": "#ffffff",
+        "surface-dim": "#e2e8f0",
+        "surface-container-lowest": "#ffffff",
+        "surface-container-low": "#f1f5f9",
+        "surface-container": "#e8eef6",
+        "surface-container-high": "#dfe6f0",
+        "surface-container-highest": "#cbd5e1",
+        "surface-variant": "#e2e8f0",
+        "on-surface": "#0f172a",
+        "on-surface-variant": "#475569",
+        "outline": "#94a3b8",
+        "outline-variant": "#cbd5e1",
+        "inverse-surface": "#1e293b",
+        "inverse-on-surface": "#f8fafc",
+        "inverse-primary": "#93b4f6",
+        "error": "#ba1a1a",
+        "error-container": "#ffdad6",
+        "on-error": "#ffffff",
+        "on-error-container": "#93000a"
+      },
+      "borderRadius": {
+        "DEFAULT": "0.125rem",
+        "lg": "0.25rem",
+        "xl": "0.5rem",
+        "full": "0.75rem"
+      },
+      "spacing": {
+        "margin": "1rem",
+        "space-lg": "1.5rem",
+        "space-md": "1rem",
+        "gutter-lg": "1.5rem",
+        "space-sm": "0.5rem",
+        "space-xs": "0.25rem",
+        "margin-lg": "2rem",
+        "gutter": "1rem",
+        "space-xl": "2rem",
+        "margin-md": "1.5rem"
+      },
+      "fontFamily": {
+        "headline-md": ["Manrope", "sans-serif"],
+        "label-md": ["Inter", "sans-serif"],
+        "display-lg": ["Manrope", "sans-serif"],
+        "body-md": ["Inter", "sans-serif"],
+        "body-sm": ["Inter", "sans-serif"],
+        "headline-lg": ["Manrope", "sans-serif"],
+        "headline-sm": ["Manrope", "sans-serif"],
+        "body-lg": ["Inter", "sans-serif"],
+        "label-sm": ["Inter", "sans-serif"],
+        "code-md": ["JetBrains Mono", "monospace"],
+        "display-lg-mobile": ["Manrope", "sans-serif"]
+      },
+      "fontSize": {
+        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+        "label-md": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+        "body-md": ["15px", { "lineHeight": "22px", "fontWeight": "400" }],
+        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+        "headline-lg": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+        "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+        "code-md": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+        "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }]
+      }
+    }
+  }
+}
+</script>
+</head>
+<body class="bg-surface font-body-md text-on-surface antialiased">
+<header class="fixed top-0 left-0 right-0 h-16 bg-surface-container-lowest border-b border-outline-variant/40 z-40 flex items-center px-space-md justify-between shadow-sm">
+<div class="flex items-center gap-space-sm w-[232px] shrink-0">
+<div class="w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-on-primary font-headline-sm text-headline-sm font-bold shadow-sm">S</div>
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md tracking-tight font-bold text-primary leading-none">StockSense</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary leading-none mt-1">ERP Enterprise</span>
+</div>
+</div>
+<div class="flex-1 max-w-[480px] mx-space-md hidden md:block">
+<div class="relative flex items-center h-[38px] w-full bg-surface-container-low rounded-xl border border-outline-variant/50 px-space-sm focus-within:ring-2 focus-within:ring-primary focus-within:bg-surface-container-lowest transition-all">
+<span class="material-symbols-outlined text-outline text-[18px] mr-space-xs shrink-0">search</span>
+<input class="w-full bg-transparent border-0 font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none" placeholder="Search products, SKUs, references…" type="text">
+</div>
+</div>
+<div class="flex items-center gap-space-md ml-auto">
+<button class="flex items-center gap-space-xs px-space-sm py-1.5 rounded-xl border border-outline-variant/40 bg-surface-container-low hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-primary text-[18px]">warehouse</span>
+<span class="font-label-md text-label-md text-on-surface font-medium hidden sm:inline">WH1 · Main Warehouse</span>
+<span class="material-symbols-outlined text-outline text-[18px]">arrow_drop_down</span>
+</button>
+<div class="h-6 w-px bg-outline-variant/50 hidden sm:block"></div>
+<div class="flex items-center gap-space-xs cursor-pointer group">
+<div class="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-on-primary font-headline-sm text-headline-sm font-semibold shrink-0 shadow-sm">
+<span class="font-label-md text-label-md">PN</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-semibold hidden md:inline">Priya Nair</span>
+<span class="material-symbols-outlined text-outline text-[18px]">arrow_drop_down</span>
+</div>
+</div>
+</header>
+<aside class="fixed left-0 top-16 bottom-0 w-[248px] bg-surface-container-low border-r border-outline-variant/40 z-30 flex flex-col justify-between overflow-y-auto">
+<div class="py-space-md flex flex-col">
+<div class="px-space-md mb-space-sm">
+<p class="font-label-sm text-label-sm uppercase font-bold text-on-surface-variant tracking-wider">Inventory App</p>
+</div>
+<nav class="flex flex-col px-space-sm space-y-0.5" data-active-classes="bg-primary text-on-primary font-label-md font-bold rounded-xl shadow-sm">
+<a class="flex items-center gap-space-sm px-space-md py-2.5 font-label-md text-label-md text-on-surface-variant rounded-xl hover:bg-surface-container hover:text-on-surface transition-colors" data-path="dashboard" href="#">
+<span class="material-symbols-outlined text-[20px]">grid_view</span>Dashboard
+</a>
+<a class="flex items-center gap-space-sm px-space-md py-2.5 font-label-md text-label-md text-on-surface-variant rounded-xl hover:bg-surface-container hover:text-on-surface transition-colors" data-path="products" href="#">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>Products
+</a>
+<div class="mt-space-sm pt-space-xs">
+<div class="px-space-md py-1 flex items-center justify-between text-on-surface-variant cursor-default">
+<span class="font-label-sm text-label-sm uppercase font-semibold tracking-wider">Operations</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</div>
+<div class="flex flex-col space-y-0.5 mt-1">
+<a class="flex items-center gap-space-sm px-space-md py-2 font-label-md text-label-md text-on-surface-variant rounded-xl hover:bg-surface-container hover:text-on-surface transition-colors" data-path="receipts" href="#">
+<span class="material-symbols-outlined text-[18px]">move_to_inbox</span>Receipts
+</a>
+<a class="flex items-center gap-space-sm px-space-md py-2 font-label-md text-label-md text-on-surface-variant rounded-xl hover:bg-surface-container hover:text-on-surface transition-colors" data-path="delivery-orders" href="#">
+<span class="material-symbols-outlined text-[18px]">local_shipping</span>Delivery Orders
+</a>
+<a class="flex items-center gap-space-sm px-space-md py-2 font-label-md text-label-md text-on-surface-variant rounded-xl hover:bg-surface-container hover:text-on-surface transition-colors" data-path="internal-transfers" href="#">
+<span class="material-symbols-outlined text-[18px]">sync_alt</span>Internal Transfers
+</a>
+<a aria-current="page" class="flex items-center gap-space-sm px-space-md py-2 transition-colors bg-primary text-on-primary font-label-md text-label-md font-bold rounded-xl shadow-sm" data-path="adjustments" href="#">
+<span class="material-symbols-outlined text-[18px]">tune</span>Adjustments
+</a>
+</div>
+</div>
+<div class="mt-space-sm pt-space-xs">
+<a class="flex items-center gap-space-sm px-space-md py-2.5 font-label-md text-label-md text-on-surface-variant rounded-xl hover:bg-surface-container hover:text-on-surface transition-colors" data-path="move-history" href="#">
+<span class="material-symbols-outlined text-[20px]">history</span>Move History
+</a>
+</div>
+<div class="mt-space-sm pt-space-xs">
+<div class="px-space-md py-1 flex items-center justify-between text-on-surface-variant cursor-default">
+<span class="font-label-sm text-label-sm uppercase font-semibold tracking-wider">Settings</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</div>
+<div class="flex flex-col space-y-0.5 mt-1">
+<a class="flex items-center gap-space-sm px-space-md py-2 font-label-md text-label-md text-on-surface-variant rounded-xl hover:bg-surface-container hover:text-on-surface transition-colors" data-path="settings-warehouses-and-locations" href="#">
+<span class="material-symbols-outlined text-[18px]">warehouse</span>Warehouses &amp; Locations
+</a>
+</div>
+</div>
+</nav>
+</div>
+<div class="p-space-md m-space-sm bg-surface-container rounded-xl border border-outline-variant/40">
+<div class="flex items-center gap-space-sm mb-space-sm">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary font-headline-sm text-headline-sm font-semibold shrink-0 shadow-sm">
+<span class="font-label-md text-label-md">PN</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<p class="font-label-md text-label-md font-semibold text-on-surface truncate">Priya Nair</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant truncate">Inventory Manager</p>
+</div>
+<div class="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" title="Active"></div>
+</div>
+<div class="flex items-center justify-between pt-space-xs border-t border-outline-variant/30 font-label-sm text-label-sm text-on-surface-variant">
+<a class="hover:text-primary transition-colors" data-path="user-profile" href="#">My Profile</a>
+<span class="text-outline-variant">•</span>
+<a class="hover:text-error transition-colors" data-path="login" href="#">Logout</a>
+</div>
+</div>
+</aside>
+<div class="pl-[248px]">
+<div class="fixed top-16 left-[248px] right-0 h-10 bg-surface-container-lowest border-b border-outline-variant/40 z-20 flex items-center px-space-lg">
+<nav class="flex items-center space-x-space-xs font-label-md text-label-md text-secondary" data-active-classes="text-primary font-semibold">
+<a class="transition-colors text-on-surface-variant hover:text-primary flex items-center gap-1" data-path="operations" href="#">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>Operations</span>
+</a>
+<span class="material-symbols-outlined text-[14px] text-outline">chevron_right</span>
+<a aria-current="page" class="transition-colors text-primary font-semibold font-code-md bg-primary-fixed/50 px-space-xs py-0.5 rounded-lg border border-primary/20" data-path="adjustments" href="#">Adjustments</a>
+</nav>
+</div>
+<main class="relative pt-26 min-h-screen bg-surface p-margin-lg pt-16"><div class="flex flex-col w-full space-y-space-xl">
+<!-- Header Bar -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-sm">
+<div>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm uppercase tracking-wider mb-1">
+<span>Operations</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary font-semibold">Stock Reconciliation</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface font-bold tracking-tight">Inventory Adjustment</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Reconcile physical cycle counts directly with ledger books to preserve valuation integrity.</p>
+</div>
+<div class="flex items-center gap-space-sm self-start md:self-auto">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm border border-outline-variant/40">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+        Ledger Locked to WH1
+      </span>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface border border-outline-variant/40 font-label-md text-label-md font-semibold transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px] text-primary">history</span>
+        Audit Log
+      </button>
+</div>
+</div>
+<!-- Primary Interactive Card -->
+<div class="w-full max-w-[760px] mx-auto bg-surface-container-lowest rounded-xl border border-outline-variant/50 shadow-sm overflow-hidden">
+<!-- Header with Alexandria Deep Navy / Cobalt Tone -->
+<div class="bg-gradient-to-r from-primary-dark via-primary to-primary-hover px-space-lg py-space-md flex items-center justify-between text-on-primary shadow-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center border border-white/20">
+<span class="material-symbols-outlined text-on-primary text-[20px]">edit_note</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-primary leading-tight font-bold">New Count Revaluation</h2>
+<p class="font-label-sm text-label-sm text-primary-fixed opacity-90">Instant real-time stock balancing slip</p>
+</div>
+</div>
+<span class="font-code-md text-label-sm bg-white/15 border border-white/20 px-2.5 py-1 rounded-lg text-on-primary tracking-wide font-semibold">ADJ-2025-0044</span>
+</div>
+<!-- Form Section -->
+<div class="p-space-lg space-y-space-lg">
+<!-- Row 1: Products & Locations -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+<div class="flex flex-col space-y-1.5">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold" for="product-select">Product Reference</label>
+<div class="relative flex items-center bg-surface-container-low rounded-xl border border-outline-variant/40 transition-all focus-within:ring-2 focus-within:ring-primary focus-within:bg-surface-container-lowest">
+<span class="material-symbols-outlined text-primary text-[18px] ml-3 shrink-0">inventory_2</span>
+<input class="w-full bg-transparent px-2.5 py-2.5 font-body-sm text-body-sm text-on-surface font-medium focus:outline-none cursor-pointer" id="product-select" readonly="" type="text" value="Steel Rods 12mm · STL-ROD-12">
+<span class="material-symbols-outlined text-outline text-[18px] mr-3 shrink-0">unfold_more</span>
+</div>
+</div>
+<div class="flex flex-col space-y-1.5">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold" for="location-select">Location / Bin</label>
+<div class="relative flex items-center bg-surface-container-low rounded-xl border border-outline-variant/40 transition-all focus-within:ring-2 focus-within:ring-primary focus-within:bg-surface-container-lowest">
+<span class="material-symbols-outlined text-primary text-[18px] ml-3 shrink-0">pin_drop</span>
+<input class="w-full bg-transparent px-2.5 py-2.5 font-body-sm text-body-sm text-on-surface font-medium focus:outline-none cursor-pointer font-code-md" id="location-select" readonly="" type="text" value="WH1/Stock/Rack A">
+<span class="material-symbols-outlined text-outline text-[18px] mr-3 shrink-0">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Row 2: Live Stock Reconciliation Triad -->
+<div class="bg-surface-container-low rounded-xl p-space-md border border-outline-variant/40">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md items-center">
+<!-- Recorded Stock -->
+<div class="flex flex-col bg-surface-container-lowest p-3.5 rounded-xl border border-outline-variant/40 shadow-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold">System Recorded</span>
+<div class="flex items-baseline gap-1.5 mt-1">
+<span class="font-code-md text-headline-lg font-bold text-on-surface" id="system-stock">300</span>
+<span class="font-label-md text-label-md text-outline">kg</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline mt-1">Last synced 14m ago</span>
+</div>
+<!-- Physical Count Input -->
+<div class="flex flex-col bg-surface-container-lowest p-3.5 rounded-xl shadow-sm ring-2 ring-primary border border-primary/20">
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wide">Physical Count</span>
+<span class="material-symbols-outlined text-primary text-[16px]">edit</span>
+</div>
+<div class="flex items-center gap-1.5 mt-1">
+<input class="w-full bg-surface-container-low font-code-md text-headline-lg font-bold text-primary px-2 py-0.5 rounded-lg focus:outline-none focus:bg-surface-container-lowest border border-outline-variant/30" id="physical-input" step="1" type="number" value="297">
+<span class="font-label-md text-label-md bg-primary-fixed/60 text-primary-dark border border-primary-fixed-dim px-2 py-1 rounded-md font-semibold">kg</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-medium mt-1">Scale verified</span>
+</div>
+<!-- Calculated Variance -->
+<div class="flex flex-col bg-error-container/30 border border-error/20 p-3.5 rounded-xl shadow-xs transition-colors" id="variance-box">
+<span class="font-label-sm text-label-sm text-error uppercase font-semibold">Variance Output</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="font-code-md text-headline-lg font-bold text-error" id="variance-val">−3</span>
+<span class="font-label-md text-label-md text-error">kg</span>
+</div>
+<div class="flex items-center gap-1 mt-1">
+<span class="font-label-sm text-label-sm text-on-error-container font-medium" id="variance-sub">Deficit identified</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Row 3: Meta Options -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+<div class="flex flex-col space-y-1.5">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold" for="reason-select">Scrap / Correction Reason</label>
+<div class="relative flex items-center bg-surface-container-low rounded-xl border border-outline-variant/40">
+<select class="w-full bg-transparent px-3 py-2.5 font-body-sm text-body-sm text-on-surface font-medium focus:outline-none appearance-none cursor-pointer" id="reason-select">
+<option value="Damaged">Damaged in Transit</option>
+<option value="Found/Surplus">Found Surplus Inventory</option>
+<option value="Lost/Stolen">Lost / Unaccounted</option>
+<option value="Data Entry Error">Typographical Ledger Correction</option>
+<option value="Scrap">Quality Audit Scrap</option>
+</select>
+<span class="material-symbols-outlined text-outline text-[18px] mr-3 pointer-events-none absolute right-0">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col space-y-1.5">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold" for="notes-field">Auditor Notes</label>
+<input class="w-full bg-surface-container-low px-3 py-2.5 rounded-xl font-body-sm text-body-sm text-on-surface border border-outline-variant/40 focus:outline-none focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest placeholder:text-outline" id="notes-field" placeholder="e.g. Bent during internal forklift transit on Rack A" type="text" value="Forklift transit impact on lower tier shelf">
+</div>
+</div>
+<!-- Real-time Financial Journal Impact -->
+<div class="p-space-md rounded-xl bg-surface-container-low border border-outline-variant/40 flex items-start gap-space-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5 shrink-0">account_balance_wallet</span>
+<div class="text-body-sm">
+<p class="font-medium text-on-surface">
+            Immediate Journal Action: 
+            <span class="font-code-md text-primary font-semibold">WH1/Stock/Rack A</span>
+<span class="text-outline">→</span>
+<span class="font-code-md text-error font-semibold">Scrap Expense (Loss: −3 kg)</span>
+</p>
+<p class="text-on-surface-variant font-label-sm text-label-sm mt-0.5">Asset ledger debit balanced against Inventory Loss Account #5021-Damages.</p>
+</div>
+</div>
+</div>
+<!-- Action Bar / Footer -->
+<div class="bg-surface-container-low border-t border-outline-variant/40 px-space-lg py-space-md flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-1.5 text-on-surface-variant text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">verified_user</span>
+<span>Reconciliation is signed by Priya Nair (ID #8491)</span>
+</div>
+<div class="flex items-center gap-space-sm w-full sm:w-auto justify-end">
+<button class="px-space-md py-2 rounded-xl bg-surface-container-lowest hover:bg-surface-container border border-outline-variant/40 text-on-surface font-label-md text-label-md font-semibold transition-colors shadow-xs" id="reset-btn" type="button">
+          Reset
+        </button>
+<button class="px-space-lg py-2 rounded-xl bg-primary hover:bg-primary-hover text-on-primary font-label-md text-label-md font-bold shadow-sm transition-all flex items-center gap-2 active:scale-95" id="apply-btn" type="button">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+          Apply Adjustment
+        </button>
+</div>
+</div>
+</div>
+<!-- Recent Reconciliation Records Ledger -->
+<div class="w-full bg-surface-container-lowest rounded-xl border border-outline-variant/50 shadow-sm overflow-hidden">
+<!-- Header Strip: Alexandria Style Navy/Slate Header -->
+<div class="bg-gradient-to-r from-primary-dark via-primary to-primary-hover px-space-lg py-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm text-on-primary">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-white/15 border border-white/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px] text-on-primary">format_list_bulleted</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-primary font-bold">Recent Adjustments Log</h3>
+<p class="font-label-sm text-label-sm text-primary-fixed opacity-90">Verified records across all operational locations</p>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="px-2.5 py-1 rounded-full bg-white/15 border border-white/20 text-on-primary font-label-sm text-label-sm font-semibold">
+          Showing 6 ledger commits
+        </span>
+<button class="inline-flex items-center gap-1 font-label-md text-label-md text-primary-fixed hover:text-white font-semibold transition-colors">
+<span class="material-symbols-outlined text-[18px]">file_download</span>
+          Export CSV
+        </button>
+</div>
+</div>
+<!-- Ledger Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider border-b border-outline-variant/40">
+<th class="py-3 px-space-md font-semibold">Reference</th>
+<th class="py-3 px-space-md font-semibold">Product &amp; SKU</th>
+<th class="py-3 px-space-md font-semibold">Location</th>
+<th class="py-3 px-space-md font-semibold text-right">Variance</th>
+<th class="py-3 px-space-md font-semibold">Reason Category</th>
+<th class="py-3 px-space-md font-semibold">Audited By</th>
+<th class="py-3 px-space-md font-semibold text-right">Execution Date</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30 text-body-sm font-body-sm">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-3.5 px-space-md">
+<a class="font-code-md text-primary font-bold hover:underline" href="#">ADJ-2025-0043</a>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="font-medium text-on-surface">Steel Rods 12mm</div>
+<div class="font-label-sm text-outline font-code-md">STL-ROD-12</div>
+</td>
+<td class="py-3.5 px-space-md font-code-md text-on-surface-variant">WH1/Stock/Rack A</td>
+<td class="py-3.5 px-space-md text-right">
+<span class="font-code-md font-bold text-error bg-error-container/50 border border-error/20 px-2 py-0.5 rounded">−3 kg</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm font-medium bg-surface-container-high text-on-surface-variant border border-outline-variant/30">Damaged</span>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary font-label-sm flex items-center justify-center font-bold text-[10px] shadow-xs">PN</span>
+<span class="text-on-surface font-medium">Priya Nair</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right font-code-md text-outline">2025-02-18 11:05</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-3.5 px-space-md">
+<a class="font-code-md text-primary font-bold hover:underline" href="#">ADJ-2025-0042</a>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="font-medium text-on-surface">Copper Wire 2.5mm</div>
+<div class="font-label-sm text-outline font-code-md">ELC-COP-02</div>
+</td>
+<td class="py-3.5 px-space-md font-code-md text-on-surface-variant">WH1/Production Floor</td>
+<td class="py-3.5 px-space-md text-right">
+<span class="font-code-md font-bold text-tertiary bg-tertiary-fixed/40 border border-tertiary/20 px-2 py-0.5 rounded">+12 m</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm font-semibold bg-tertiary-container/15 text-tertiary border border-tertiary/20">Found in count</span>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-primary-fixed text-primary font-label-sm flex items-center justify-center font-bold text-[10px] border border-primary/20">RP</span>
+<span class="text-on-surface font-medium">Rahul Patil</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right font-code-md text-outline">2025-02-17 16:30</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-3.5 px-space-md">
+<a class="font-code-md text-primary font-bold hover:underline" href="#">ADJ-2025-0041</a>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="font-medium text-on-surface">Hex Bolt M10</div>
+<div class="font-label-sm text-outline font-code-md">FST-HEX-10</div>
+</td>
+<td class="py-3.5 px-space-md font-code-md text-on-surface-variant">WH2/Stock/B3</td>
+<td class="py-3.5 px-space-md text-right">
+<span class="font-code-md font-bold text-error bg-error-container/50 border border-error/20 px-2 py-0.5 rounded">−15 pcs</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm font-medium bg-surface-container-high text-on-surface-variant border border-outline-variant/30">Scrap</span>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-secondary-container text-secondary font-label-sm flex items-center justify-center font-bold text-[10px]">AV</span>
+<span class="text-on-surface font-medium">Anand Verma</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right font-code-md text-outline">2025-02-17 14:15</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-3.5 px-space-md">
+<a class="font-code-md text-primary font-bold hover:underline" href="#">ADJ-2025-0040</a>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="font-medium text-on-surface">Pallet Wrap Film</div>
+<div class="font-label-sm text-outline font-code-md">PKG-WRP-01</div>
+</td>
+<td class="py-3.5 px-space-md font-code-md text-on-surface-variant">WH1/Packaging/Area 2</td>
+<td class="py-3.5 px-space-md text-right">
+<span class="font-code-md font-bold text-tertiary bg-tertiary-fixed/40 border border-tertiary/20 px-2 py-0.5 rounded">+2 rolls</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm font-semibold bg-tertiary-container/15 text-tertiary border border-tertiary/20">Surplus</span>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary font-label-sm flex items-center justify-center font-bold text-[10px] shadow-xs">PN</span>
+<span class="text-on-surface font-medium">Priya Nair</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right font-code-md text-outline">2025-02-16 09:40</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-3.5 px-space-md">
+<a class="font-code-md text-primary font-bold hover:underline" href="#">ADJ-2025-0039</a>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="font-medium text-on-surface">LED Panel 40W</div>
+<div class="font-label-sm text-outline font-code-md">LGT-LED-40</div>
+</td>
+<td class="py-3.5 px-space-md font-code-md text-on-surface-variant">WH1/Stock/Rack C</td>
+<td class="py-3.5 px-space-md text-right">
+<span class="font-code-md font-bold text-error bg-error-container/50 border border-error/20 px-2 py-0.5 rounded">−1 pcs</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm font-medium bg-surface-container-high text-on-surface-variant border border-outline-variant/30">Packaging breach</span>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-primary-fixed text-primary font-label-sm flex items-center justify-center font-bold text-[10px] border border-primary/20">RP</span>
+<span class="text-on-surface font-medium">Rahul Patil</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right font-code-md text-outline">2025-02-15 17:50</td>
+</tr>
+<!-- Row 6 -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-3.5 px-space-md">
+<a class="font-code-md text-primary font-bold hover:underline" href="#">ADJ-2025-0038</a>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="font-medium text-on-surface">Aluminum Sheet 2mm</div>
+<div class="font-label-sm text-outline font-code-md">MET-ALU-02</div>
+</td>
+<td class="py-3.5 px-space-md font-code-md text-on-surface-variant">WH2/Yard/Bay 4</td>
+<td class="py-3.5 px-space-md text-right">
+<span class="font-code-md font-bold text-tertiary bg-tertiary-fixed/40 border border-tertiary/20 px-2 py-0.5 rounded">+50 pcs</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm font-semibold bg-tertiary-container/15 text-tertiary border border-tertiary/20">Found in count</span>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-secondary-container text-secondary font-label-sm flex items-center justify-center font-bold text-[10px]">AV</span>
+<span class="text-on-surface font-medium">Anand Verma</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right font-code-md text-outline">2025-02-14 12:10</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Interactive Variance Calculator Script -->
+<script>
+    (function initVarianceLogic() {
+      const recorded = 300;
+      const physicalInput = document.getElementById('physical-input');
+      const varianceVal = document.getElementById('variance-val');
+      const varianceSub = document.getElementById('variance-sub');
+      const varianceBox = document.getElementById('variance-box');
+      const resetBtn = document.getElementById('reset-btn');
+      const applyBtn = document.getElementById('apply-btn');
+
+      function recalculate() {
+        const counted = parseFloat(physicalInput.value) || 0;
+        const diff = counted - recorded;
+
+        if (diff < 0) {
+          varianceVal.textContent = diff.toString().replace('-', '−');
+          varianceVal.className = 'font-code-md text-headline-lg font-bold text-error';
+          varianceSub.textContent = 'Deficit identified';
+          varianceSub.className = 'font-label-sm text-label-sm text-on-error-container font-medium';
+          varianceBox.className = 'flex flex-col bg-error-container/30 border border-error/20 p-3.5 rounded-xl shadow-xs transition-colors';
+        } else if (diff > 0) {
+          varianceVal.textContent = '+' + diff;
+          varianceVal.className = 'font-code-md text-headline-lg font-bold text-tertiary';
+          varianceSub.textContent = 'Surplus gain';
+          varianceSub.className = 'font-label-sm text-label-sm text-tertiary font-semibold';
+          varianceBox.className = 'flex flex-col bg-tertiary-fixed/30 border border-tertiary/20 p-3.5 rounded-xl shadow-xs transition-colors';
+        } else {
+          varianceVal.textContent = '0';
+          varianceVal.className = 'font-code-md text-headline-lg font-bold text-on-surface';
+          varianceSub.textContent = 'Exact match';
+          varianceSub.className = 'font-label-sm text-label-sm text-outline font-medium';
+          varianceBox.className = 'flex flex-col bg-surface-container-high border border-outline-variant/40 p-3.5 rounded-xl shadow-xs transition-colors';
+        }
+      }
+
+      physicalInput.addEventListener('input', recalculate);
+
+      resetBtn.addEventListener('click', function() {
+        physicalInput.value = '300';
+        recalculate();
+      });
+
+      applyBtn.addEventListener('click', function() {
+        const counted = parseFloat(physicalInput.value) || 0;
+        const diff = counted - recorded;
+        const msg = diff === 0 
+          ? 'Physical count matches ledger! No adjustment booked.' 
+          : 'Adjustment of ' + (diff > 0 ? '+' : '') + diff + ' kg successfully committed to ERP ledger.';
+        alert(msg);
+      });
+    })();
+  </script>
+</div></main>
+</div>
+</body></html>

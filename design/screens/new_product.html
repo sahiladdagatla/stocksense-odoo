@@ -1,0 +1,531 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="web_dashboard" name="shell-type">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+@layer base {
+  html, body { margin: 0; padding: 0; }
+  body { overscroll-behavior: none; }
+  main > :first-child { margin-top: 0 !important; }
+  main > :last-child { margin-bottom: 0 !important; }
+}
+::-webkit-scrollbar { display: none; }
+</style>
+<script src="https://cdn.tailwindcss.com"></script>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      "colors": {
+        "tertiary-fixed-dim": "#62d6ed",
+        "surface": "#f6faff",
+        "on-primary": "#ffffff",
+        "on-primary-fixed-variant": "#5a3e53",
+        "tertiary": "#003038",
+        "secondary-fixed-dim": "#e9b8d9",
+        "surface-container-highest": "#dbe4ed",
+        "primary": "#3c2236",
+        "on-tertiary": "#ffffff",
+        "on-primary-container": "#c7a2bb",
+        "secondary-container": "#fac9ea",
+        "on-primary-fixed": "#2b1326",
+        "surface-container-high": "#e0e9f2",
+        "on-error": "#ffffff",
+        "surface-bright": "#f6faff",
+        "surface-tint": "#74556b",
+        "tertiary-fixed": "#a4eeff",
+        "outline": "#7f747a",
+        "inverse-on-surface": "#e9f2fb",
+        "inverse-surface": "#293138",
+        "on-surface-variant": "#4d444a",
+        "surface-dim": "#d2dbe4",
+        "surface-variant": "#dbe4ed",
+        "background": "#f6faff",
+        "error-container": "#ffdad6",
+        "on-tertiary-container": "#43bcd2",
+        "outline-variant": "#d0c3c9",
+        "tertiary-container": "#004853",
+        "primary-fixed-dim": "#e2bbd5",
+        "primary-fixed": "#ffd7f2",
+        "surface-container-low": "#ecf5fe",
+        "on-secondary-container": "#78516d",
+        "error": "#ba1a1a",
+        "on-secondary-fixed": "#2f1029",
+        "secondary": "#79526f",
+        "on-secondary": "#ffffff",
+        "inverse-primary": "#e2bbd5",
+        "on-tertiary-fixed": "#001f25",
+        "on-secondary-fixed-variant": "#5f3b56",
+        "on-tertiary-fixed-variant": "#004e5a",
+        "surface-container": "#e6eff8",
+        "secondary-fixed": "#ffd7f1",
+        "on-surface": "#141d23",
+        "surface-container-lowest": "#ffffff",
+        "primary-container": "#54384d",
+        "on-background": "#141d23",
+        "on-error-container": "#93000a"
+      },
+      "borderRadius": {
+        "DEFAULT": "0.125rem",
+        "lg": "0.25rem",
+        "xl": "0.5rem",
+        "full": "0.75rem"
+      },
+      "spacing": {
+        "space-sm": "0.5rem",
+        "margin": "1rem",
+        "gutter": "1rem",
+        "space-xs": "0.25rem",
+        "space-xl": "2rem",
+        "space-md": "1rem",
+        "gutter-lg": "1.5rem",
+        "margin-lg": "2rem",
+        "space-lg": "1.5rem",
+        "margin-md": "1.5rem"
+      },
+      "fontFamily": {
+        "headline-md": ["Manrope"],
+        "label-sm": ["Inter"],
+        "headline-lg": ["Manrope"],
+        "body-lg": ["Inter"],
+        "body-sm": ["Inter"],
+        "code-md": ["monospace"],
+        "label-md": ["Inter"],
+        "body-md": ["Inter"],
+        "headline-sm": ["Manrope"],
+        "display-lg-mobile": ["Manrope"],
+        "display-lg": ["Manrope"]
+      },
+      "fontSize": {
+        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+        "headline-lg": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+        "code-md": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+        "label-md": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+        "body-md": ["15px", { "lineHeight": "22px", "fontWeight": "400" }],
+        "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+        "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+      }
+    }
+  }
+}
+</script>
+</head>
+<body class="bg-surface-container-lowest font-body-md text-on-surface antialiased">
+<header class="fixed top-0 left-0 right-0 h-16 bg-surface-container-lowest border-b border-outline-variant z-40 flex items-center px-space-md justify-between">
+<div class="flex items-center gap-space-sm w-[232px] shrink-0">
+<span class="font-headline-md text-headline-md tracking-tight font-bold text-[#094cb2]">stocksense</span>
+<span class="font-label-sm text-label-sm px-space-xs py-0.5 rounded-full bg-secondary-container text-on-secondary-container border border-outline-variant font-medium">ERP</span>
+</div>
+<div class="flex-1 max-w-[480px] mx-space-md hidden md:block">
+<div class="relative flex items-center h-[38px] w-full bg-surface-container-lowest rounded-xl border border-outline-variant px-space-sm">
+<span class="material-symbols-outlined text-outline text-[18px] mr-space-xs shrink-0">search</span>
+<input class="w-full bg-transparent border-0 font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none" placeholder="Search products, SKUs, references…" type="text">
+</div>
+</div>
+<div class="flex items-center gap-space-md ml-auto">
+<button class="flex items-center gap-space-xs px-space-sm py-1.5 rounded-xl border border-outline-variant bg-surface-container-lowest hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-outline text-[18px]">warehouse</span>
+<span class="font-label-md text-label-md text-on-surface font-medium hidden sm:inline">WH1 · Main Warehouse</span>
+<span class="material-symbols-outlined text-outline text-[18px]">arrow_drop_down</span>
+</button>
+<div class="h-6 w-px bg-outline-variant hidden sm:block"></div>
+<div class="flex items-center gap-space-xs cursor-pointer group">
+<div class="w-9 h-9 rounded-xl bg-[#094cb2] flex items-center justify-center text-on-primary font-headline-sm text-headline-sm font-semibold shrink-0"><span class="font-label-md text-label-md">PN</span></div>
+<span class="font-label-md text-label-md text-on-surface font-semibold hidden md:inline">Priya Nair</span>
+<span class="material-symbols-outlined text-outline text-[18px]">arrow_drop_down</span>
+</div>
+</div>
+</header>
+<aside class="fixed left-0 top-16 bottom-0 w-[248px] bg-surface-container-lowest border-r border-outline-variant z-30 flex flex-col justify-between overflow-y-auto">
+<div class="py-space-md flex flex-col">
+<div class="px-space-md mb-space-sm">
+<p class="font-label-sm text-label-sm uppercase font-semibold text-outline tracking-wider">Inventory App</p>
+</div>
+<nav class="flex flex-col" data-active-classes="bg-[rgba(113,75,103,0.08)] text-[#714B67] border-l-[3px] border-[#714B67] font-semibold">
+<a class="flex items-center px-space-md py-2.5 font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="dashboard" href="#">Dashboard</a>
+<a aria-current="page" class="flex items-center px-space-md py-2.5 transition-colors bg-[rgba(9,76,178,0.08)] text-[#094cb2] border-l-[3px] border-[#094cb2] font-semibold" data-path="products" href="#">Products</a>
+<div class="mt-space-sm pt-space-xs">
+<div class="px-space-md py-1 flex items-center justify-between text-outline cursor-default">
+<span class="font-label-sm text-label-sm uppercase font-semibold tracking-wider">Operations</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</div>
+<div class="flex flex-col">
+<a class="flex items-center pl-8 pr-space-md py-2 font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="receipts" href="#">Receipts</a>
+<a class="flex items-center pl-8 pr-space-md py-2 font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="delivery-orders" href="#">Delivery Orders</a>
+<a class="flex items-center pl-8 pr-space-md py-2 font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="internal-transfers" href="#">Internal Transfers</a>
+<a class="flex items-center pl-8 pr-space-md py-2 font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="adjustments" href="#">Adjustments</a>
+</div>
+</div>
+<div class="mt-space-sm pt-space-xs">
+<a class="flex items-center px-space-md py-2.5 font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="move-history" href="#">Move History</a>
+</div>
+<div class="mt-space-sm pt-space-xs">
+<div class="px-space-md py-1 flex items-center justify-between text-outline cursor-default">
+<span class="font-label-sm text-label-sm uppercase font-semibold tracking-wider">Settings</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</div>
+<div class="flex flex-col">
+<a class="flex items-center pl-8 pr-space-md py-2 font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="settings-warehouses-and-locations" href="#">Warehouses &amp; Locations</a>
+</div>
+</div>
+</nav>
+</div>
+<div class="p-space-md border-t border-outline-variant bg-surface-container-lowest">
+<div class="flex items-center gap-space-sm mb-space-sm">
+<div class="w-9 h-9 rounded-xl bg-[#094cb2] flex items-center justify-center text-on-primary font-headline-sm text-headline-sm font-semibold shrink-0"><span class="font-label-md text-label-md">PN</span></div>
+<div class="flex flex-col min-w-0 flex-1">
+<p class="font-body-sm text-body-sm font-semibold text-on-surface truncate">Priya Nair</p>
+<p class="font-label-sm text-label-sm text-outline truncate">Inventory Manager</p>
+</div>
+</div>
+<div class="flex items-center justify-between pt-space-xs font-label-sm text-label-sm text-on-surface-variant">
+<a class="hover:text-primary transition-colors" data-path="user-profile" href="#">My Profile</a>
+<span class="text-outline-variant">•</span>
+<a class="hover:text-error transition-colors" data-path="login" href="#">Logout</a>
+</div>
+</div>
+</aside>
+<div class="pl-[248px]">
+<div class="fixed top-16 left-[248px] right-0 h-10 bg-surface-container-lowest border-b border-outline-variant z-20 flex items-center px-space-lg">
+<nav class="flex items-center space-x-space-xs font-label-md text-label-md" data-active-classes="text-[#714B67] font-semibold">
+<span class="text-on-surface-variant">Inventory</span>
+<span class="text-outline-variant">/</span>
+<a aria-current="page" class="transition-colors text-[#094cb2] font-semibold" data-path="products" href="#">Products</a>
+</nav>
+</div>
+<main class="relative pt-16 min-h-screen bg-surface-container-lowest p-margin-lg"><div class="flex flex-col w-full">
+<!-- Control Bar & Transaction Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between pb-space-lg mb-space-lg border-b border-outline-variant gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm">
+<h1 class="font-headline-lg text-headline-lg text-on-surface">New product</h1>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm font-label-sm uppercase bg-outline-variant/60 text-on-surface-variant font-bold">
+            Draft product
+          </span>
+</div>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Define master catalog specifications, stocking thresholds, and physical logistics routing.</p>
+</div>
+</div>
+<!-- Top Action Buttons -->
+<div class="flex items-center gap-space-sm">
+<button class="h-[44px] px-space-md rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface font-label-md text-label-md font-semibold hover:bg-surface-container transition-colors flex items-center gap-1.5 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px] text-outline">close</span>
+        Discard
+      </button>
+<button class="h-[44px] px-space-lg rounded-xl bg-[#094cb2] text-on-primary font-label-md text-label-md font-semibold hover:bg-[#3366cc] transition-colors flex items-center gap-1.5 shadow-sm" type="button"><span class="material-symbols-outlined text-[18px]">save</span> Save</button>
+</div>
+</div>
+<!-- Master Split Layout Grid (65% / 35%) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-lg items-start">
+<!-- Left Column (65% Width / 8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-space-lg">
+<!-- Card 1: Product Details -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden">
+<!-- Plum Gradient Banner Header -->
+<div class="h-12 bg-gradient-to-r from-[#094cb2] to-[#002664] px-space-md flex items-center justify-between text-on-primary"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px] text-on-primary">inventory_2</span><span class="font-headline-sm text-headline-sm text-on-primary">Product details</span></div><span class="font-label-sm text-label-sm text-primary-fixed uppercase tracking-wider font-semibold">Master Reference</span></div>
+<!-- Card Body -->
+<div class="p-space-lg flex flex-col gap-space-md">
+<!-- Product Name -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md font-semibold text-on-surface flex items-center gap-1" for="product-name">
+              Product name <span class="text-error font-bold">*</span>
+</label>
+<input class="h-[42px] px-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-outline" id="product-name" placeholder="e.g. Industrial Steel Pipe 25mm" type="text" value="Reinforced Galvanized Steel Rods 16mm">
+</div>
+<!-- Two-column Row: SKU + Category -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+<!-- SKU Input -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md font-semibold text-on-surface" for="product-sku">
+                  SKU / Internal Reference
+                </label>
+<button class="font-label-sm text-label-sm font-semibold text-[#094cb2] hover:text-[#3366cc] flex items-center gap-1 transition-colors" id="sku-autogen" type="button"><span class="material-symbols-outlined text-[15px]">auto_awesome</span> Auto-generate</button>
+</div>
+<input class="h-[42px] px-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface font-code-md text-code-md tracking-wide focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all" id="product-sku" type="text" value="STL-ROD-16">
+</div>
+<!-- Category Select -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md font-semibold text-on-surface" for="product-cat">
+                Category
+              </label>
+<div class="relative">
+<select class="w-full h-[42px] pl-space-sm pr-9 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface font-body-md text-body-md appearance-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer" id="product-cat">
+<option selected="" value="Raw Materials">Raw Materials</option>
+<option value="Furniture">Furniture</option>
+<option value="Electrical">Electrical</option>
+<option value="Packaging">Packaging</option>
+<option value="Hardware">Hardware</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-outline text-[20px]">
+                  arrow_drop_down
+                </span>
+</div>
+</div>
+</div>
+<!-- Two-column Row: UoM + Barcode -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+<!-- Unit of Measure -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md font-semibold text-on-surface" for="product-uom">
+                Unit of measure (UoM)
+              </label>
+<div class="relative">
+<select class="w-full h-[42px] pl-space-sm pr-9 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface font-body-md text-body-md appearance-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer" id="product-uom">
+<option selected="" value="kg">kg (Kilograms)</option>
+<option value="pcs">pcs (Pieces)</option>
+<option value="m">m (Meters)</option>
+<option value="rolls">rolls (Rolls)</option>
+<option value="sheets">sheets (Sheets)</option>
+<option value="L">L (Liters)</option>
+<option value="pairs">pairs (Pairs)</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-outline text-[20px]">
+                  arrow_drop_down
+                </span>
+</div>
+</div>
+<!-- Barcode / EAN-13 -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md font-semibold text-on-surface" for="product-barcode">
+                Barcode / EAN-13 <span class="text-outline font-normal font-label-sm">(optional)</span>
+</label>
+<div class="relative">
+<input class="w-full h-[42px] pl-space-sm pr-9 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface font-code-md text-code-md tracking-wider focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all" id="product-barcode" placeholder="e.g. 8901072004921" type="text" value="8901072004921">
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-outline text-[18px]">
+                  qr_code
+                </span>
+</div>
+</div>
+</div>
+<!-- Description -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md font-semibold text-on-surface" for="product-desc">
+              Description &amp; Internal Notes
+            </label>
+<textarea class="w-full p-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface font-body-sm text-body-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all resize-y placeholder:text-outline" id="product-desc" placeholder="Detailed specifications, grade standards, or warehouse handling notes..." rows="3">High-tensile corrosion-resistant steel rebar. Grade Fe 550D conforming to IS 1786. Bundled in 12m standardized industrial lengths for primary structural fabrication.</textarea>
+</div>
+</div>
+</div>
+<!-- Card 2: Initial Stock (Optional) -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden">
+<!-- Plum Gradient Banner Header -->
+<div class="h-12 bg-gradient-to-r from-[#094cb2] to-[#002664] px-space-md flex items-center justify-between text-on-primary"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px] text-on-primary">warehouse</span><span class="font-headline-sm text-headline-sm text-on-primary">Initial stock (optional)</span></div><span class="font-label-sm text-label-sm text-primary-fixed uppercase tracking-wider font-semibold">Ledger Init</span></div>
+<!-- Card Body -->
+<div class="p-space-lg flex flex-col gap-space-md">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+<!-- Opening Quantity -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md font-semibold text-on-surface" for="opening-qty">
+                Opening quantity
+              </label>
+<div class="relative">
+<input class="w-full h-[42px] pl-space-sm pr-12 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface font-code-md text-code-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all" id="opening-qty" placeholder="0.00" type="text" value="250.00">
+<span class="absolute right-3 top-1/2 -translate-y-1/2 font-label-md text-label-md text-outline font-semibold">kg</span>
+</div>
+</div>
+<!-- Initial Location -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md font-semibold text-on-surface" for="initial-loc">
+                Initial location
+              </label>
+<div class="relative">
+<select class="w-full h-[42px] pl-space-sm pr-9 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface font-body-md text-body-md appearance-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer" id="initial-loc">
+<option selected="" value="WH1/Stock/Rack A">WH1/Stock/Rack A</option>
+<option value="WH1/Stock/Rack B">WH1/Stock/Rack B</option>
+<option value="WH1/Production Floor">WH1/Production Floor</option>
+<option value="WH2/Stock">WH2/Stock</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-outline text-[20px]">
+                  arrow_drop_down
+                </span>
+</div>
+</div>
+</div>
+<!-- Audit Helper Notice -->
+<div class="flex items-start gap-2 pt-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] text-outline shrink-0 mt-0.5">policy</span>
+<p class="font-body-sm text-body-sm text-outline">
+              Logged in the ledger as an opening adjustment: <span class="font-code-md text-code-md text-on-surface">Virtual Locations/Inventory Loss → WH1/Stock/Rack A</span>.
+            </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column (35% Width / 4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-space-lg">
+<!-- Card 3: Reordering Rule -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden">
+<!-- Plum Gradient Banner Header -->
+<div class="h-12 bg-gradient-to-r from-[#094cb2] to-[#002664] px-space-md flex items-center justify-between text-on-primary"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px] text-on-primary">sync_alt</span><span class="font-headline-sm text-headline-sm text-on-primary">Reordering rule</span></div><span class="font-label-sm text-label-sm text-primary-fixed uppercase tracking-wider font-semibold">Automated</span></div>
+<!-- Card Body -->
+<div class="p-space-lg flex flex-col gap-space-md">
+<div class="grid grid-cols-2 gap-space-sm">
+<!-- Min Qty -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md font-semibold text-on-surface" for="min-qty">
+                Minimum qty
+              </label>
+<div class="relative">
+<input class="w-full h-[42px] pl- space-sm pr-9 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface font-code-md text-code-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all text-right px-2" id="min-qty" type="text" value="150.00">
+<span class="absolute right-2 top-1/2 -translate-y-1/2 font-label-sm text-label-sm text-outline">kg</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Trigger threshold</span>
+</div>
+<!-- Reorder Qty -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md font-semibold text-on-surface" for="reorder-qty">
+                Reorder qty
+              </label>
+<div class="relative">
+<input class="w-full h-[42px] pl-space-sm pr-9 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface font-code-md text-code-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all text-right px-2" id="reorder-qty" type="text" value="500.00">
+<span class="absolute right-2 top-1/2 -translate-y-1/2 font-label-sm text-label-sm text-outline">kg</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Order batch size</span>
+</div>
+</div>
+<!-- Preferred Vendor -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md font-semibold text-on-surface" for="preferred-vendor">
+              Preferred vendor
+            </label>
+<div class="relative">
+<select class="w-full h-[42px] pl-space-sm pr-9 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface font-body-md text-body-md appearance-none focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer" id="preferred-vendor">
+<option selected="" value="Tata Steel Ltd">Tata Steel Ltd</option>
+<option value="Godrej Interio">Godrej Interio</option>
+<option value="Polycab India">Polycab India</option>
+<option value="Standard Metal Distributors">Standard Metal Distributors</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-outline text-[20px]">
+                arrow_drop_down
+              </span>
+</div>
+</div>
+<!-- Info Alert Box -->
+<div class="rounded-xl p-space-sm bg-[#e7ebff] text-[#001946] flex items-start gap-2.5"><span class="material-symbols-outlined text-[20px] text-[#094cb2] shrink-0 mt-0.5">info</span><p class="font-body-sm text-body-sm leading-snug">When stock falls below <strong class="font-semibold">150.00 kg</strong>, a draft receipt for <strong class="font-semibold">500.00 kg</strong> from <strong class="font-semibold">Tata Steel Ltd</strong> will be suggested automatically.</p></div>
+</div>
+</div>
+<!-- Card 4: Label Preview -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-space-lg flex flex-col">
+<div class="flex items-center justify-between pb-space-sm border-b border-outline-variant mb-space-md">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Label preview</h2>
+<span class="font-label-sm text-label-sm text-outline uppercase font-semibold">100 × 60 mm</span>
+</div>
+<!-- Shelf Label Emulation Frame -->
+<div class="border border-dashed border-outline-variant rounded-xl p-space-md bg-surface-container-low flex flex-col items-center text-center relative overflow-hidden mb-space-md">
+<!-- Watermark header -->
+<div class="w-full flex items-center justify-between text-outline border-b border-outline-variant/60 pb-1.5 mb-2.5">
+<span class="font-code-md text-[10px] tracking-wider font-bold">STOCKSENSE ERP</span>
+<span class="font-code-md text-[10px] tracking-wider font-bold text-[#094cb2]">LOC: WH1-R-A</span>
+</div>
+<!-- Barcode / QR Simulation Matrix -->
+<div class="p-2 bg-surface-container-lowest rounded-lg border border-outline-variant shadow-sm my-1">
+<svg class="w-24 h-24 text-on-surface" fill="currentColor" viewBox="0 0 100 100">
+<!-- Corner Square Top-Left -->
+<rect fill="currentColor" height="26" rx="2" width="26" x="5" y="5"></rect>
+<rect fill="#FFFFFF" height="18" width="18" x="9" y="9"></rect>
+<rect fill="currentColor" height="10" rx="1" width="10" x="13" y="13"></rect>
+<!-- Corner Square Top-Right -->
+<rect fill="currentColor" height="26" rx="2" width="26" x="69" y="5"></rect>
+<rect fill="#FFFFFF" height="18" width="18" x="73" y="9"></rect>
+<rect fill="currentColor" height="10" rx="1" width="10" x="77" y="13"></rect>
+<!-- Corner Square Bottom-Left -->
+<rect fill="currentColor" height="26" rx="2" width="26" x="5" y="69"></rect>
+<rect fill="#FFFFFF" height="18" width="18" x="9" y="73"></rect>
+<rect fill="currentColor" height="10" rx="1" width="10" x="13" y="77"></rect>
+<!-- Central Matrix Pattern Points -->
+<rect height="6" rx="0.5" width="6" x="36" y="8"></rect>
+<rect height="6" rx="0.5" width="6" x="46" y="8"></rect>
+<rect height="6" rx="0.5" width="6" x="56" y="8"></rect>
+<rect height="12" rx="0.5" width="6" x="36" y="18"></rect>
+<rect height="6" rx="0.5" width="6" x="46" y="24"></rect>
+<rect height="6" rx="0.5" width="6" x="56" y="18"></rect>
+<rect height="6" rx="0.5" width="6" x="8" y="36"></rect>
+<rect height="18" rx="0.5" width="6" x="18" y="42"></rect>
+<rect height="6" rx="0.5" width="6" x="28" y="36"></rect>
+<rect height="8" rx="1" width="8" x="36" y="36"></rect>
+<rect height="14" rx="0.5" width="6" x="48" y="36"></rect>
+<rect height="6" rx="0.5" width="6" x="58" y="42"></rect>
+<rect height="6" rx="0.5" width="12" x="68" y="36"></rect>
+<rect height="8" rx="0.5" width="8" x="84" y="36"></rect>
+<rect height="6" rx="0.5" width="6" x="36" y="52"></rect>
+<rect height="6" rx="0.5" width="14" x="46" y="56"></rect>
+<rect height="12" rx="0.5" width="6" x="66" y="48"></rect>
+<rect height="6" rx="0.5" width="16" x="76" y="52"></rect>
+<rect height="14" rx="0.5" width="6" x="36" y="68"></rect>
+<rect height="6" rx="0.5" width="6" x="48" y="68"></rect>
+<rect height="6" rx="0.5" width="12" x="58" y="74"></rect>
+<rect height="6" rx="0.5" width="16" x="48" y="80"></rect>
+<rect height="18" rx="0.5" width="6" x="74" y="68"></rect>
+<rect height="12" rx="0.5" width="8" x="84" y="74"></rect>
+</svg>
+</div>
+<!-- Label Metadata Details -->
+<div class="mt-2 text-center w-full">
+<span class="font-code-md text-body-md font-bold tracking-wider text-on-surface block" id="preview-sku">
+              STL-ROD-16
+            </span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface block truncate max-w-full" id="preview-name">
+              Reinforced Steel Rods 16mm
+            </span>
+<span class="font-label-sm text-label-sm text-outline mt-0.5 block" id="preview-meta">
+              kg · Raw Materials
+            </span>
+</div>
+</div>
+<!-- Download Action Button -->
+<button class="h-[40px] w-full rounded-xl bg-[#094cb2] text-on-primary font-label-md text-label-md font-semibold hover:bg-[#3366cc] transition-colors flex items-center justify-center gap-space-xs shadow-sm" type="button"><span class="material-symbols-outlined text-[18px]">print</span> Download label (PDF)</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function initProductForm() {
+    const skuInput = document.getElementById('product-sku');
+    const nameInput = document.getElementById('product-name');
+    const catSelect = document.getElementById('product-cat');
+    const uomSelect = document.getElementById('product-uom');
+    const autogenBtn = document.getElementById('sku-autogen');
+
+    const previewSku = document.getElementById('preview-sku');
+    const previewName = document.getElementById('preview-name');
+    const previewMeta = document.getElementById('preview-meta');
+
+    function syncPreview() {
+      if (previewSku && skuInput) previewSku.textContent = skuInput.value.trim() || 'SKU-PENDING';
+      if (previewName && nameInput) previewName.textContent = nameInput.value.trim() || 'Untitled Product';
+      if (previewMeta && uomSelect && catSelect) {
+        previewMeta.textContent = `${uomSelect.value} · ${catSelect.value}`;
+      }
+    }
+
+    if (nameInput) nameInput.addEventListener('input', syncPreview);
+    if (skuInput) skuInput.addEventListener('input', syncPreview);
+    if (catSelect) catSelect.addEventListener('change', syncPreview);
+    if (uomSelect) uomSelect.addEventListener('change', syncPreview);
+
+    if (autogenBtn && skuInput) {
+      autogenBtn.addEventListener('click', () => {
+        const cat = catSelect ? catSelect.value.substring(0, 3).toUpperCase() : 'GEN';
+        const rnd = Math.floor(1000 + Math.random() * 9000);
+        skuInput.value = `${cat}-${rnd}`;
+        syncPreview();
+      });
+    }
+  })();
+</script></main>
+</div>
+</body></html>
