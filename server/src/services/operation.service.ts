@@ -52,7 +52,7 @@ export async function resolveLocations(
   return { source, dest, warehouseCode: source.warehouse.code };
 }
 
-async function assertProductsExist(tx: Tx, ids: number[]) {
+export async function assertProductsExist(tx: Tx, ids: number[]) {
   const found = await tx.product.count({ where: { id: { in: ids } } });
   if (found !== new Set(ids).size) throw notFound('One or more products do not exist');
 }

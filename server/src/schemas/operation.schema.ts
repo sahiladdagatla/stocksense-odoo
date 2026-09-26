@@ -45,3 +45,36 @@ export const adjustmentCreate = z.object({
 export type OperationCreate = z.infer<typeof operationCreate>;
 export type OperationUpdate = z.infer<typeof operationUpdate>;
 export type AdjustmentCreate = z.infer<typeof adjustmentCreate>;
+
+const opType = z.enum(['RECEIPT', 'DELIVERY', 'INTERNAL', 'ADJUSTMENT']);
+const opStatus = z.enum(['DRAFT', 'WAITING', 'READY', 'DONE', 'CANCELED']);
+/** Accepts `status=READY` or `status=READY,WAITING`. */
+const statusList = z
+  .string()
+  .transform((s) => s.split(',').map((v) => v.trim().toUpperCase()))
+  .pipe(z.array(opStatus).min(1));
+
+export const operationQuery = z.object({
+  type: opType.optional(),
+  status: statusList.optional(),
+  warehouseId: id.optional(),
+  categoryId: id.optional(),
+  search: z.string().trim().max(100).optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(200).default(20),
+});
+
+export const moveQuery = z.object({
+  productId: id.optional(),
+  locationId: id.optional(),
+  type: opType.optional(),
+  userId: id.optional(),
+  from: z.coerce.date().optional(),
+  to: z.coerce.date().optional(),
+  search: z.string().trim().max(100).optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(200).default(25),
+});
+
+export type OperationQuery = z.infer<typeof operationQuery>;
+export type MoveQuery = z.infer<typeof moveQuery>;
