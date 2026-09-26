@@ -12,7 +12,7 @@ export async function listLocations(opts: { warehouseId?: number; includeVirtual
   });
 }
 
-type TreeNode = Location & { children: TreeNode[] };
+type TreeNode = Location & { onHand: number; children: TreeNode[] };
 
 /** Warehouses, each with its internal locations nested by parent. */
 export async function locationTree() {
@@ -20,7 +20,12 @@ export async function locationTree() {
     prisma.warehouse.findMany({ orderBy: { code: 'asc' } }),
     prisma.location.findMany({ where: { type: 'INTERNAL' }, orderBy: { fullName: 'asc' } }),
   ]);
-  const nodes = new Map<number, TreeNode>(locations.map((l) => [l.id, { ...l, children: [] }]));
+  // Units held directly at each location; the client rolls these up for subtree totals.
+  const sums = await prisma.stockQuant.groupBy({ by: ['locationId'], _sum: { quantity: true } });
+  const units = new Map(sums.map((r) => [r.locationId, r._sum.quantity?.toNumber() ?? 0]));
+  const nodes = new Map<number, TreeNode>(
+    locations.map((l) => [l.id, { ...l, onHand: units.get(l.id) ?? 0, children: [] }]),
+  );
   const roots = new Map<number, TreeNode[]>(warehouses.map((w) => [w.id, []]));
   for (const node of nodes.values()) {
     const parent = node.parentId ? nodes.get(node.parentId) : undefined;

@@ -89,6 +89,8 @@ export const productUpdate = z
 export const productQuery = pageQuery.extend({
   search: z.string().trim().max(100).optional(),
   categoryId: optionalId,
+  warehouseId: optionalId,
+  stockStatus: z.enum(['IN_STOCK', 'LOW', 'OUT']).optional(),
 });
 
 export type ProductCreate = z.infer<typeof productCreate>;

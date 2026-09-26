@@ -15,16 +15,24 @@ export function stockStatus(onHand: number, reorderMin: number): StockStatus {
 const DAY = 24 * 60 * 60 * 1000;
 export const OUTFLOW_WINDOW_DAYS = 14;
 
-/** Total on-hand per product across all internal locations. */
-export async function onHandByProduct(productIds: number[]) {
+/** Total on-hand per product across internal locations (optionally one warehouse only). */
+export async function onHandByProduct(productIds: number[], warehouseId?: number) {
   const rows = await prisma.stockQuant.groupBy({
     by: ['productId'],
-    where: { productId: { in: productIds } },
+    where: {
+      productId: { in: productIds },
+      ...(warehouseId && { location: { warehouseId } }),
+    },
     _sum: { quantity: true },
   });
   return new Map(rows.map((r) => [r.productId, r._sum.quantity?.toNumber() ?? 0]));
 }
 
+/**
+ * Stock status depends on computed on-hand, so filtering by it happens after aggregation.
+ * The candidate set is only (id, reorderMin) rows, which stays cheap for catalogues of
+ * thousands of products; full rows are loaded for the requested page only.
+ */
 export async function listProducts(q: ProductQuery) {
   const where: Prisma.ProductWhereInput = {};
   if (q.categoryId) where.categoryId = q.categoryId;
@@ -34,22 +42,34 @@ export async function listProducts(q: ProductQuery) {
       { sku: { contains: q.search, mode: 'insensitive' } },
     ];
   }
-  const [total, products] = await Promise.all([
-    prisma.product.count({ where }),
-    prisma.product.findMany({
-      where,
-      include: { category: { select: { id: true, name: true } } },
-      orderBy: { name: 'asc' },
-      skip: (q.page - 1) * q.pageSize,
-      take: q.pageSize,
-    }),
-  ]);
-  const onHand = await onHandByProduct(products.map((p) => p.id));
-  const items = products.map((p) => {
-    const qty = onHand.get(p.id) ?? 0;
-    return { ...p, onHand: qty, stockStatus: stockStatus(qty, p.reorderMin.toNumber()) };
+  const candidates = await prisma.product.findMany({
+    where,
+    select: { id: true, reorderMin: true },
+    orderBy: [{ name: 'asc' }, { id: 'asc' }],
   });
-  return { items, total, page: q.page, pageSize: q.pageSize };
+  const onHand = await onHandByProduct(
+    candidates.map((c) => c.id),
+    q.warehouseId,
+  );
+  const withStatus = candidates.map((c) => {
+    const qty = onHand.get(c.id) ?? 0;
+    return { id: c.id, onHand: qty, stockStatus: stockStatus(qty, c.reorderMin.toNumber()) };
+  });
+  const filtered = q.stockStatus
+    ? withStatus.filter((c) => c.stockStatus === q.stockStatus)
+    : withStatus;
+  const pageRows = filtered.slice((q.page - 1) * q.pageSize, q.page * q.pageSize);
+
+  const products = await prisma.product.findMany({
+    where: { id: { in: pageRows.map((r) => r.id) } },
+    include: { category: { select: { id: true, name: true } } },
+  });
+  const byId = new Map(products.map((p) => [p.id, p]));
+  const items = pageRows.flatMap((r) => {
+    const p = byId.get(r.id);
+    return p ? [{ ...p, onHand: r.onHand, stockStatus: r.stockStatus }] : [];
+  });
+  return { items, total: filtered.length, page: q.page, pageSize: q.pageSize };
 }
 
 export async function getProduct(id: number) {

@@ -123,3 +123,25 @@ export async function updateMe(userId: number, input: UpdateMeInput) {
   });
   return toPublicUser(updated);
 }
+
+/** Activity counters for the profile page, derived from the ledger. */
+export async function myStats(userId: number) {
+  const [validated, adjustments, lastMove] = await Promise.all([
+    prisma.operation.count({
+      where: { status: 'DONE', type: { not: 'ADJUSTMENT' }, moves: { some: { userId } } },
+    }),
+    prisma.operation.count({
+      where: { status: 'DONE', type: 'ADJUSTMENT', moves: { some: { userId } } },
+    }),
+    prisma.stockMove.findFirst({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+      select: { createdAt: true },
+    }),
+  ]);
+  return {
+    operationsValidated: validated,
+    adjustmentsLogged: adjustments,
+    lastActivityAt: lastMove?.createdAt ?? null,
+  };
+}

@@ -136,6 +136,10 @@ describe('products & categories', () => {
     ).toEqual(['WH1/Stock', 'WH1/Stock/Rack A']);
     expect(detail.daysLeft).toBeNull(); // no outflow yet
 
+    const low = (await api().get('/api/products?stockStatus=LOW').set(h.staff)).body;
+    expect(low.items.map((p: { sku: string }) => p.sku)).toEqual(['ALU-1']);
+    expect(low.total).toBe(1);
+
     expect((await api().get('/api/products/sku/stl-1').set(h.staff)).body.id).toBe(steel.id);
   });
 

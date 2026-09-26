@@ -25,6 +25,7 @@ export function authRoutes() {
   r.post('/forgot-password', otpLimiter, c.forgotPassword);
   r.post('/reset-password', otpLimiter, c.resetPassword);
   r.get('/me', requireAuth, c.me);
+  r.get('/me/stats', requireAuth, c.myStats);
   r.patch('/me', requireAuth, c.updateMe);
   return r;
 }

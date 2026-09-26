@@ -36,3 +36,7 @@ export async function me(req: Request, res: Response) {
 export async function updateMe(req: Request, res: Response) {
   res.json(await auth.updateMe(currentUser(req).id, parse(updateMeSchema, req.body)));
 }
+
+export async function myStats(req: Request, res: Response) {
+  res.json(await auth.myStats(currentUser(req).id));
+}
