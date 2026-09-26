@@ -13,6 +13,8 @@ import {
   VIRTUAL_LOCATIONS,
   WAREHOUSES,
 } from './seed-data.js';
+import { seedHistory } from './seed-history.js';
+import { integrityCheck } from '../src/services/stock.service.js';
 
 /** Map lookup that fails loudly instead of silently inserting undefined. */
 function must<V>(map: Map<string, V>, key: string): V {
@@ -88,14 +90,18 @@ async function main() {
   console.log('Seeding StockSense (this wipes existing data)…');
   await wipe();
   await seedMasterData();
+  await seedHistory();
 
-  const [users, locations, products] = await Promise.all([
+  const [users, locations, products, operations, moves, integrity] = await Promise.all([
     prisma.user.count(),
     prisma.location.count(),
     prisma.product.count(),
+    prisma.operation.count(),
+    prisma.stockMove.count(),
+    integrityCheck(),
   ]);
   console.log(
-    `Done in ${Date.now() - started}ms: ${users} users, ${locations} locations, ${products} products.`,
+    `Done in ${Date.now() - started}ms: ${users} users, ${locations} locations, ${products} products, ${operations} operations, ${moves} moves. Ledger balanced: ${integrity.balanced}.`,
   );
   console.log('Login: manager@stocksense.dev / Manager@123  ·  staff@stocksense.dev / Staff@123');
 }

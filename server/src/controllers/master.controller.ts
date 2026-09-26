@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
 import { parse } from '../lib/validate.js';
+import { currentUser } from '../middleware/auth.js';
 import * as wh from '../services/warehouse.service.js';
 import * as loc from '../services/location.service.js';
 import * as cat from '../services/category.service.js';
@@ -87,7 +88,9 @@ export const productStock = async (req: Request, res: Response) => {
   res.json(await prod.productStock(id(req)));
 };
 export const createProduct = async (req: Request, res: Response) => {
-  res.status(201).json(await prod.createProduct(parse(productCreate, req.body)));
+  res
+    .status(201)
+    .json(await prod.createProduct(parse(productCreate, req.body), currentUser(req).id));
 };
 export const updateProduct = async (req: Request, res: Response) => {
   res.json(await prod.updateProduct(id(req), parse(productUpdate, req.body)));

@@ -1,6 +1,7 @@
 import type { Prisma } from '@prisma/client';
 import { prisma } from '../lib/prisma.js';
-import { notFound } from '../lib/errors.js';
+import { badRequest, notFound } from '../lib/errors.js';
+import { adjustStockTx, notifyStockChange } from './stock.service.js';
 import type { ProductCreate, ProductQuery, ProductUpdate } from '../schemas/master.schema.js';
 
 export type StockStatus = 'IN_STOCK' | 'LOW' | 'OUT';
@@ -71,8 +72,31 @@ export async function getProductBySku(sku: string) {
   return getProduct(p.id);
 }
 
-export async function createProduct(input: ProductCreate) {
-  return prisma.product.create({ data: input });
+/** Creates a product; opening stock (if any) is an automatic adjustment in the same transaction. */
+export async function createProduct(input: ProductCreate, userId: number) {
+  const { initialQty, initialLocationId, ...data } = input;
+  if (initialQty && !initialLocationId) {
+    throw badRequest('Choose a location for the initial stock', 'LOCATION_REQUIRED');
+  }
+  const result = await prisma.$transaction(async (tx) => {
+    const product = await tx.product.create({ data });
+    const adj =
+      initialQty && initialLocationId
+        ? await adjustStockTx(
+            tx,
+            {
+              productId: product.id,
+              locationId: initialLocationId,
+              countedQty: initialQty,
+              reason: 'Opening stock',
+            },
+            userId,
+          )
+        : null;
+    return { product, operation: adj?.operation ?? null };
+  });
+  if (result.operation) await notifyStockChange(result.operation, [result.product.id]);
+  return result.product;
 }
 
 export async function updateProduct(id: number, input: ProductUpdate) {

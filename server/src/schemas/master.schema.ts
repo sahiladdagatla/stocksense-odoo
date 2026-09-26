@@ -72,6 +72,9 @@ export const productCreate = z.object({
   categoryId: z.coerce.number().int().positive(),
   reorderMin: qty.default(0),
   reorderQty: qty.default(0),
+  /** Optional opening stock, booked as an inventory adjustment so it appears in the ledger. */
+  initialQty: qty.optional(),
+  initialLocationId: optionalId,
 });
 export const productUpdate = z
   .object({
