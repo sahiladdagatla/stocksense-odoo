@@ -22,7 +22,8 @@
     "format:check": "prettier --check .",
     "test": "npm run test --workspaces --if-present",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm run test",
-    "dev:https": "concurrently -n server,client -c blue,magenta \"npm run dev -w server\" \"npm run dev:https -w client\""
+    "dev:https": "concurrently -n server,client -c blue,magenta \"npm run dev -w server\" \"npm run dev:https -w client\"",
+    "db:migrate": "npm run db:deploy -w server"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",

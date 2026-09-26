@@ -6,7 +6,7 @@ import { Logo } from '@/components/common/Logo';
 import { useLiveUpdates } from '@/hooks/useLiveUpdates';
 import { useAuth } from '@/providers/auth';
 import { Sidebar, SidebarNav, SidebarUserCard } from './Sidebar';
-import { MobileSearch, TopNav } from './TopNav';
+import { MobileSearch, TopNav, WarehouseSwitcher } from './TopNav';
 
 export function AppLayout() {
   const { status } = useAuth();
@@ -31,6 +31,9 @@ export function AppLayout() {
             <SheetTitle className="sr-only">Navigation</SheetTitle>
             <div className="flex h-16 items-center border-b border-divider px-4">
               <Logo />
+            </div>
+            <div className="border-b border-divider p-3 md:hidden">
+              <WarehouseSwitcher />
             </div>
             <SidebarNav onNavigate={() => setMenuOpen(false)} />
             <SidebarUserCard onNavigate={() => setMenuOpen(false)} />

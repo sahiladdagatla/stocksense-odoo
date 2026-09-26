@@ -101,7 +101,7 @@ function GlobalSearch() {
   );
 }
 
-function WarehouseSwitcher() {
+export function WarehouseSwitcher() {
   const { warehouses, current, setWarehouseId } = useWarehouse();
   return (
     <DropdownMenu>
