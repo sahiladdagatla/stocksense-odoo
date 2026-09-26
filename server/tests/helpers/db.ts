@@ -1,4 +1,17 @@
 import { prisma } from '../../src/lib/prisma.js';
+import { signToken } from '../../src/lib/jwt.js';
+
+/** Creates a manager and a staff user and returns ready-to-use Authorization headers. */
+export async function authHeaders() {
+  const mk = (email: string, role: 'MANAGER' | 'STAFF') =>
+    prisma.user.create({ data: { name: role, email, role, passwordHash: 'x' } });
+  const [m, s] = await Promise.all([mk('m@x.com', 'MANAGER'), mk('s@x.com', 'STAFF')]);
+  return {
+    managerUser: m,
+    manager: { Authorization: `Bearer ${signToken(m)}` },
+    staff: { Authorization: `Bearer ${signToken(s)}` },
+  };
+}
 
 /** Empties every table in the test database. */
 export async function resetDb() {

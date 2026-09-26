@@ -1,0 +1,128 @@
+import type { Prisma } from '@prisma/client';
+import { prisma } from '../lib/prisma.js';
+import { notFound } from '../lib/errors.js';
+import type { ProductCreate, ProductQuery, ProductUpdate } from '../schemas/master.schema.js';
+
+export type StockStatus = 'IN_STOCK' | 'LOW' | 'OUT';
+
+export function stockStatus(onHand: number, reorderMin: number): StockStatus {
+  if (onHand <= 0) return 'OUT';
+  if (onHand <= reorderMin) return 'LOW';
+  return 'IN_STOCK';
+}
+
+const DAY = 24 * 60 * 60 * 1000;
+export const OUTFLOW_WINDOW_DAYS = 14;
+
+/** Total on-hand per product across all internal locations. */
+export async function onHandByProduct(productIds: number[]) {
+  const rows = await prisma.stockQuant.groupBy({
+    by: ['productId'],
+    where: { productId: { in: productIds } },
+    _sum: { quantity: true },
+  });
+  return new Map(rows.map((r) => [r.productId, r._sum.quantity?.toNumber() ?? 0]));
+}
+
+export async function listProducts(q: ProductQuery) {
+  const where: Prisma.ProductWhereInput = {};
+  if (q.categoryId) where.categoryId = q.categoryId;
+  if (q.search) {
+    where.OR = [
+      { name: { contains: q.search, mode: 'insensitive' } },
+      { sku: { contains: q.search, mode: 'insensitive' } },
+    ];
+  }
+  const [total, products] = await Promise.all([
+    prisma.product.count({ where }),
+    prisma.product.findMany({
+      where,
+      include: { category: { select: { id: true, name: true } } },
+      orderBy: { name: 'asc' },
+      skip: (q.page - 1) * q.pageSize,
+      take: q.pageSize,
+    }),
+  ]);
+  const onHand = await onHandByProduct(products.map((p) => p.id));
+  const items = products.map((p) => {
+    const qty = onHand.get(p.id) ?? 0;
+    return { ...p, onHand: qty, stockStatus: stockStatus(qty, p.reorderMin.toNumber()) };
+  });
+  return { items, total, page: q.page, pageSize: q.pageSize };
+}
+
+export async function getProduct(id: number) {
+  const p = await prisma.product.findUnique({
+    where: { id },
+    include: { category: { select: { id: true, name: true } } },
+  });
+  if (!p) throw notFound('Product not found');
+  const onHand = (await onHandByProduct([id])).get(id) ?? 0;
+  return { ...p, onHand, stockStatus: stockStatus(onHand, p.reorderMin.toNumber()) };
+}
+
+/** Exact SKU lookup (case-insensitive), used by global search and Scan Mode. */
+export async function getProductBySku(sku: string) {
+  const p = await prisma.product.findFirst({
+    where: { sku: { equals: sku.trim(), mode: 'insensitive' } },
+    select: { id: true },
+  });
+  if (!p) throw notFound(`No product with SKU ${sku}`);
+  return getProduct(p.id);
+}
+
+export async function createProduct(input: ProductCreate) {
+  return prisma.product.create({ data: input });
+}
+
+export async function updateProduct(id: number, input: ProductUpdate) {
+  await getProduct(id);
+  return prisma.product.update({ where: { id }, data: input });
+}
+
+export async function deleteProduct(id: number) {
+  await getProduct(id);
+  // Products with ledger history can't be deleted (FK Restrict -> 409 IN_USE); empty quants can go.
+  await prisma.$transaction([
+    prisma.stockQuant.deleteMany({ where: { productId: id, quantity: 0 } }),
+    prisma.product.delete({ where: { id } }),
+  ]);
+}
+
+/** Per-location breakdown plus outflow velocity (deliveries + losses over the last 14 days). */
+export async function productStock(id: number) {
+  const product = await getProduct(id);
+  const [quants, outflow] = await Promise.all([
+    prisma.stockQuant.findMany({
+      where: { productId: id, quantity: { gt: 0 } },
+      include: {
+        location: {
+          select: {
+            id: true,
+            name: true,
+            fullName: true,
+            warehouse: { select: { id: true, code: true, name: true } },
+          },
+        },
+      },
+      orderBy: { quantity: 'desc' },
+    }),
+    prisma.stockMove.aggregate({
+      where: {
+        productId: id,
+        createdAt: { gte: new Date(Date.now() - OUTFLOW_WINDOW_DAYS * DAY) },
+        fromLoc: { type: 'INTERNAL' },
+        toLoc: { type: { not: 'INTERNAL' } },
+      },
+      _sum: { quantity: true },
+    }),
+  ]);
+  const avgDailyOut = (outflow._sum.quantity?.toNumber() ?? 0) / OUTFLOW_WINDOW_DAYS;
+  return {
+    product,
+    total: product.onHand,
+    locations: quants.map((q) => ({ location: q.location, quantity: q.quantity.toNumber() })),
+    avgDailyOut: Math.round(avgDailyOut * 1000) / 1000,
+    daysLeft: avgDailyOut > 0 ? Math.floor(product.onHand / avgDailyOut) : null,
+  };
+}
