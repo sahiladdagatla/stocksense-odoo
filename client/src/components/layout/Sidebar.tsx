@@ -20,7 +20,7 @@ import { cn } from '@/lib/utils';
 type Item = { to: string; label: string; icon: LucideIcon };
 type Group = { label: string; items: Item[]; collapsible?: boolean };
 
-export const NAV: Group[] = [
+const NAV: Group[] = [
   {
     label: 'Inventory app',
     items: [
