@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FormField } from '@/components/common/FormField';
+import { LogoMark, Wordmark } from '@/components/common/Logo';
 import { PageHeader } from '@/components/common/PageHeader';
 import { Panel, SectionHeaderBar } from '@/components/common/SectionHeaderBar';
 import { ErrorState } from '@/components/common/States';
@@ -121,6 +122,10 @@ function LabelPreview({
         <span className="text-xs font-semibold text-muted-foreground">100 × 60 MM</span>
       </div>
       <div className="rounded-lg border border-dashed border-divider bg-deck p-4 text-center">
+        <p className="mb-3 flex items-center gap-1.5">
+          <LogoMark className="size-5" />
+          <Wordmark className="text-sm" />
+        </p>
         <div className="mx-auto mb-3 flex size-32 items-center justify-center rounded-lg border border-divider bg-white p-2">
           {valid && qr ? (
             <img src={qr} alt={`QR code for ${sku}`} className="size-full" />

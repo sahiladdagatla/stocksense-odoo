@@ -22,6 +22,7 @@ import { Panel, SectionHeaderBar } from '@/components/common/SectionHeaderBar';
 import { EmptyState, ErrorState } from '@/components/common/States';
 import { StockBadge } from '@/components/common/StatusPill';
 import { MoveQty, MoveRoute } from '@/components/common/MoveBits';
+import { LogoMark, Wordmark } from '@/components/common/Logo';
 import { useMoves, useProductStock } from '@/hooks/useMasterData';
 import { fmtDateTime, fmtQty } from '@/lib/format';
 import { downloadDataUrl, renderLabelPng, skuQrDataUrl } from '@/lib/label';
@@ -263,8 +264,9 @@ export function ProductDetailPage() {
             Product label
           </h3>
           <div className="rounded-lg border border-divider bg-white p-4 text-center">
-            <p className="mb-2 text-left text-[11px] font-semibold tracking-wider text-draft">
-              STOCKSENSE ERP
+            <p className="logo-on-light mb-2 flex items-center gap-1.5">
+              <LogoMark className="size-5" />
+              <Wordmark className="text-sm" />
             </p>
             {qr ? (
               <img src={qr} alt={`QR code for ${p.sku}`} className="mx-auto size-36" />

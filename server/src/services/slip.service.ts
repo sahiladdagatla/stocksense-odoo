@@ -3,6 +3,19 @@ import { badRequest } from '../lib/errors.js';
 import { getOperation } from './operation-doc.service.js';
 
 const PLUM = '#714B67';
+
+/** StockSense logo mark (64×64 SVG paths), light palette for the plum header band. */
+const LOGO_FACES: [string, string][] = [
+  ['M11.22 37.27 L39.39 51.35 L39.39 61.0 L11.22 46.92Z', '#b58aa9'],
+  ['M52.78 44.65 L39.39 51.35 L39.39 61.0 L52.78 54.3Z', '#8d6683'],
+  ['M24.61 30.57 L52.78 44.65 L39.39 51.35 L11.22 37.27Z', '#6b4a62'],
+  ['M36.14 28.75 L52.78 44.65 L39.39 51.35 L22.74 35.45Z', '#5c3f55'],
+  ['M11.22 17.28 L22.74 23.04 L22.74 35.45 L11.22 29.69Z', '#c9a3bd'],
+  ['M36.14 16.34 L22.74 23.04 L22.74 35.45 L36.14 28.75Z', '#8d6683'],
+  ['M11.22 9.7 L39.39 23.78 L39.39 31.36 L11.22 17.28Z', '#b58aa9'],
+  ['M52.78 17.08 L39.39 23.78 L39.39 31.36 L52.78 24.66Z', '#b58aa9'],
+  ['M24.61 3.0 L52.78 17.08 L39.39 23.78 L11.22 9.7Z', '#f1e4ec'],
+];
 const MUTED = '#6C757D';
 const TEXT = '#212529';
 
@@ -33,8 +46,21 @@ export async function deliverySlip(id: number): Promise<{ reference: string; pdf
 
   // Header band
   doc.rect(0, 0, doc.page.width, 90).fill(PLUM);
-  doc.fillColor('#FFFFFF').font('Helvetica-Bold').fontSize(22).text('StockSense', left, 30);
-  doc.font('Helvetica').fontSize(11).text('Delivery Slip', left, 58);
+  doc.save().translate(left, 22).scale(0.72).lineJoin('round').lineWidth(1.4);
+  for (const [d, color] of LOGO_FACES) doc.path(d).fillAndStroke(color, color);
+  doc.restore();
+  doc
+    .fillColor('#FFFFFF')
+    .font('Helvetica-Bold')
+    .fontSize(22)
+    .text('stock', left + 54, 30, { continued: true })
+    .fillColor('#E2BBD5')
+    .text('sense');
+  doc
+    .fillColor('#FFFFFF')
+    .font('Helvetica')
+    .fontSize(11)
+    .text('Delivery Slip', left + 54, 58);
   doc.font('Helvetica-Bold').fontSize(16).text(op.reference, left, 34, { width, align: 'right' });
   doc.font('Helvetica').fontSize(10).text(op.status, left, 58, { width, align: 'right' });
 

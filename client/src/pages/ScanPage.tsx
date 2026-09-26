@@ -28,6 +28,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { FilterSelect } from '@/components/common/FilterSelect';
+import { LogoMark } from '@/components/common/Logo';
 import { FormField } from '@/components/common/FormField';
 import { useLocations } from '@/hooks/useMasterData';
 import { useLiveStatus, useLiveUpdates } from '@/hooks/useLiveUpdates';
@@ -363,6 +364,7 @@ export function ScanPage() {
         >
           <ArrowLeft className="size-5" />
         </Link>
+        <LogoMark className="logo-on-dark size-7" />
         <h1 className="font-display text-lg font-semibold">
           Scan <span className="font-mono text-xs opacity-70">· {current?.code ?? 'All'}</span>
         </h1>

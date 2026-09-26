@@ -1,5 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
-import { AlertTriangle, Loader2 } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
+import { LogoMark } from './Logo';
 import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { errorMessage } from '@/lib/api';
@@ -49,8 +50,12 @@ export function ErrorState({ error, onRetry }: { error: unknown; onRetry?: () =>
 
 export function FullPageLoader() {
   return (
-    <div className="flex min-h-svh items-center justify-center bg-background">
-      <Loader2 className="size-8 animate-spin text-plum" aria-label="Loading" />
+    <div
+      className="flex min-h-svh flex-col items-center justify-center gap-4 bg-background"
+      role="status"
+    >
+      <LogoMark className="size-14 animate-pulse" />
+      <span className="sr-only">Loading StockSense</span>
     </div>
   );
 }

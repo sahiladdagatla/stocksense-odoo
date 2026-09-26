@@ -1,4 +1,5 @@
 import QRCode from 'qrcode';
+import { LOGO_COLORS, LOGO_FACES } from './logo';
 
 export type LabelProduct = { sku: string; name: string; uom: string; category?: string };
 
@@ -26,9 +27,24 @@ export async function renderLabelPng(p: LabelProduct): Promise<string> {
   await QRCode.toCanvas(qr, p.sku, { width: 440, margin: 0, errorCorrectionLevel: 'M' });
   ctx.drawImage(qr, 60, 80, 440, 440);
 
-  ctx.fillStyle = '#6c757d';
-  ctx.font = '600 26px Inter, Arial, sans-serif';
-  ctx.fillText('STOCKSENSE ERP', 560, 110);
+  // Brand: logo mark + two-tone wordmark.
+  ctx.save();
+  ctx.translate(560, 64);
+  ctx.scale(0.8, 0.8);
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = 1.4;
+  for (const face of LOGO_FACES) {
+    const path = new Path2D(face.d);
+    ctx.fillStyle = ctx.strokeStyle = LOGO_COLORS[face.part];
+    ctx.fill(path);
+    ctx.stroke(path);
+  }
+  ctx.restore();
+  ctx.font = '800 34px Manrope, Inter, Arial, sans-serif';
+  ctx.fillStyle = '#3c2236';
+  ctx.fillText('stock', 624, 110);
+  ctx.fillStyle = '#7a4a6e';
+  ctx.fillText('sense', 624 + ctx.measureText('stock').width, 110);
 
   ctx.fillStyle = '#212529';
   ctx.font = '700 52px "JetBrains Mono", Consolas, monospace';

@@ -1,3 +1,5 @@
+<p align="center"><img src="design/logo/stocksense-logo.svg" alt="StockSense" width="360"></p>
+
 # StockSense – Inventory Management System
 
 StockSense is a full-stack inventory system for multi-warehouse operations: receipts, delivery orders,
@@ -118,7 +120,7 @@ server/  Express + TypeScript + Prisma
 client/  Vite + React + TypeScript + Tailwind + shadcn/ui
   src/pages        screens (one shared list + form drive all operation types)
   src/components   design-system components (DataTable, StatusStepper, KanbanBoard, …)
-design/  UI design system (DESIGN.md) and screen references
+design/  UI design system (DESIGN.md), logo files (design/logo) and screen references
 ```
 
 ## API
