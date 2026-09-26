@@ -29,7 +29,7 @@ import { StockBadge } from '@/components/common/StatusPill';
 import { STOCK_LABEL, stockTone } from '@/lib/stock';
 import { useApiMutation, useCategories, useProducts } from '@/hooks/useMasterData';
 import { api } from '@/lib/api';
-import { fmtQty } from '@/lib/format';
+import { fmtQty, plural } from '@/lib/format';
 import type { Product } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/providers/auth';
@@ -205,7 +205,7 @@ export function ProductsPage() {
             Products
             {data && (
               <span className="rounded-full bg-plum-tint px-2.5 py-0.5 font-sans text-sm font-semibold text-plum">
-                {data.total} items
+                {plural(data.total, 'item')}
               </span>
             )}
           </span>

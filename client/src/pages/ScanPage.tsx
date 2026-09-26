@@ -284,13 +284,14 @@ export function ScanPage() {
       );
       return;
     }
-    scanner
+    const started = scanner
       .start(
         { facingMode: 'environment' },
         { fps: 10, qrbox: { width: 240, height: 240 }, aspectRatio: 1 },
         onScan,
         () => undefined,
       )
+      .then(() => true)
       .catch((err: unknown) => {
         if (!cancelled)
           setCameraError(
@@ -298,15 +299,21 @@ export function ScanPage() {
               ? 'Camera permission was denied. Allow it in your browser settings, or type the SKU.'
               : 'No camera available. Type the SKU instead.',
           );
+        return false;
       });
     return () => {
       cancelled = true;
-      if (scanner.isScanning)
-        void scanner
-          .stop()
-          .then(() => scanner.clear())
-          .catch(() => undefined);
       scannerRef.current = null;
+      // Wait for start() to settle before stopping: leaving the page while the camera is still
+      // starting must not leave it running in the background.
+      void started.then(async (running) => {
+        try {
+          if (running) await scanner.stop();
+          scanner.clear();
+        } catch {
+          /* already stopped */
+        }
+      });
     };
   }, [lookup]);
 
@@ -389,7 +396,9 @@ export function ScanPage() {
       <div className="relative flex-1 overflow-hidden">
         <div
           id={READER_ID}
-          className="size-full [&_video]:!h-full [&_video]:!w-full [&_video]:object-cover"
+          // [&>div]:hidden removes the library's own shaded box and "Scanner paused" caption;
+          // the page draws its own scan frame.
+          className="size-full [&_video]:!h-full [&_video]:!w-full [&_video]:object-cover [&>div]:!hidden"
         />
         {!cameraError && (
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-4">

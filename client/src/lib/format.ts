@@ -30,3 +30,7 @@ export function initials(name: string) {
 
 export const roleLabel = (role: Role) =>
   role === 'MANAGER' ? 'Inventory Manager' : 'Warehouse Staff';
+
+/** "1 item", "3 items". */
+export const plural = (n: number, word: string, many = `${word}s`) =>
+  `${n} ${n === 1 ? word : many}`;

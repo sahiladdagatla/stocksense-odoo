@@ -38,7 +38,7 @@ import { useLocations, useProducts } from '@/hooks/useMasterData';
 import { useOperation } from '@/hooks/useOperations';
 import { useOperationActions } from '@/hooks/useOperationActions';
 import { api, errorMessage } from '@/lib/api';
-import { fmtDateTime, fmtQty } from '@/lib/format';
+import { fmtDateTime, fmtQty, plural } from '@/lib/format';
 import { OP_META, toLocalInput, type DocType } from '@/lib/operations';
 import type { OperationDetail, ProductStock } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -500,7 +500,7 @@ export function OperationFormPage({ type }: { type: DocType }) {
               <SectionHeaderBar
                 icon={ListChecks}
                 title="Products"
-                badge={`${draft.lines.filter((l) => l.productId).length} items`}
+                badge={plural(draft.lines.filter((l) => l.productId).length, 'item')}
               />
               <div className="overflow-x-auto">
                 <table className="stack-table w-full text-sm">
