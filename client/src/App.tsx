@@ -15,6 +15,7 @@ import { OperationListPage } from '@/pages/operations/OperationListPage';
 import { OperationFormPage } from '@/pages/operations/OperationFormPage';
 import { AdjustmentsPage } from '@/pages/operations/AdjustmentsPage';
 import { MovesPage } from '@/pages/MovesPage';
+import { ScanPage } from '@/pages/ScanPage';
 
 export default function App() {
   return (
@@ -25,6 +26,8 @@ export default function App() {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       </Route>
       <Route element={<ProtectedRoute />}>
+        {/* Scan Mode is full-screen and mobile-first, outside the app shell. */}
+        <Route path="/scan" element={<ScanPage />} />
         <Route element={<AppLayout />}>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<DashboardPage />} />
