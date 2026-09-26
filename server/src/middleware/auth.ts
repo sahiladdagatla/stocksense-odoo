@@ -30,11 +30,12 @@ export const requireAuth: RequestHandler = async (req, _res, next) => {
 
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { id: true, name: true, email: true, role: true },
+    select: { id: true, name: true, email: true, role: true, active: true },
   });
   if (!user) throw unauthorized('Account no longer exists', 'INVALID_TOKEN');
+  if (!user.active) throw unauthorized('This account has been deactivated', 'ACCOUNT_DISABLED');
 
-  req.user = user;
+  req.user = { id: user.id, name: user.name, email: user.email, role: user.role };
   next();
 };
 

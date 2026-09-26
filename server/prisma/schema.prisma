@@ -42,6 +42,8 @@ model User {
   email        String    @unique
   passwordHash String
   role         Role      @default(STAFF)
+  /// Deactivated users cannot sign in; their history stays in the ledger.
+  active       Boolean   @default(true)
   otpHash      String?
   otpExpiry    DateTime?
   /// Failed OTP verifications for the current OTP (brute-force guard).

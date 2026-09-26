@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { api, errorMessage } from '@/lib/api';
 import type {
+  OrgUser,
   Category,
   Location,
   Move,
@@ -10,6 +11,9 @@ import type {
   ProductStock,
   WarehouseTree,
 } from '@/lib/types';
+
+export const useUsers = () =>
+  useQuery({ queryKey: ['users'], queryFn: () => api.get<OrgUser[]>('/users') });
 
 export const useCategories = () =>
   useQuery({ queryKey: ['categories'], queryFn: () => api.get<Category[]>('/categories') });

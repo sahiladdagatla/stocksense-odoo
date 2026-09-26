@@ -10,6 +10,7 @@ import {
   ScanLine,
   SlidersHorizontal,
   Truck,
+  UsersRound,
   Warehouse,
   type LucideIcon,
 } from 'lucide-react';
@@ -17,7 +18,7 @@ import { useAuth } from '@/providers/auth';
 import { initials, roleLabel } from '@/lib/format';
 import { cn } from '@/lib/utils';
 
-type Item = { to: string; label: string; icon: LucideIcon };
+type Item = { to: string; label: string; icon: LucideIcon; managerOnly?: boolean };
 type Group = { label: string; items: Item[]; collapsible?: boolean };
 
 const NAV: Group[] = [
@@ -48,7 +49,10 @@ const NAV: Group[] = [
   {
     label: 'Settings',
     collapsible: true,
-    items: [{ to: '/settings/warehouses', label: 'Warehouses & Locations', icon: Warehouse }],
+    items: [
+      { to: '/settings/warehouses', label: 'Warehouses & Locations', icon: Warehouse },
+      { to: '/settings/users', label: 'Users & Roles', icon: UsersRound, managerOnly: true },
+    ],
   },
 ];
 
@@ -74,6 +78,7 @@ function NavItem({ item, onNavigate }: { item: Item; onNavigate?: () => void }) 
 }
 
 export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
+  const { isManager } = useAuth();
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   return (
     <nav aria-label="Main" className="flex-1 space-y-4 overflow-y-auto py-4 pr-3">
@@ -100,9 +105,11 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
             )}
             {!isCollapsed && (
               <div className="space-y-0.5">
-                {group.items.map((item) => (
-                  <NavItem key={item.to} item={item} onNavigate={onNavigate} />
-                ))}
+                {group.items
+                  .filter((item) => !item.managerOnly || isManager)
+                  .map((item) => (
+                    <NavItem key={item.to} item={item} onNavigate={onNavigate} />
+                  ))}
               </div>
             )}
           </div>

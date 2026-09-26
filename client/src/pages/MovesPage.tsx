@@ -19,7 +19,7 @@ import { PageHeader } from '@/components/common/PageHeader';
 import { Panel, SectionHeaderBar } from '@/components/common/SectionHeaderBar';
 import { EmptyState, ErrorState } from '@/components/common/States';
 import { MoveQty, MoveRoute } from '@/components/common/MoveBits';
-import { useLocations, useMoves, useProducts } from '@/hooks/useMasterData';
+import { useLocations, useMoves, useProducts, useUsers } from '@/hooks/useMasterData';
 import { api, errorMessage } from '@/lib/api';
 import { fmtDateTime, fmtInt, fmtQty } from '@/lib/format';
 import { OP_META } from '@/lib/operations';
@@ -76,6 +76,7 @@ export function MovesPage() {
     productId: get('productId'),
     locationId: get('locationId'),
     type: get('type'),
+    userId: get('userId'),
     search: get('search'),
     from: get('from') ? dayStart(get('from')!) : undefined,
     to: get('to') ? dayEnd(get('to')!) : undefined,
@@ -95,6 +96,7 @@ export function MovesPage() {
   const moves = useMoves({ ...filters, page, pageSize });
   const { data: productPage } = useProducts({ page: 1, pageSize: 100 });
   const { data: locations = [] } = useLocations({ includeVirtual: true });
+  const users = useUsers();
 
   async function runCheck() {
     setChecking(true);
@@ -264,7 +266,7 @@ export function MovesPage() {
         </div>
       )}
 
-      <div className="mb-4 grid gap-3 rounded-lg border border-divider bg-canvas p-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+      <div className="mb-4 grid gap-3 rounded-lg border border-divider bg-canvas p-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7">
         <label className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">
           <span className="flex items-center gap-1">
             <CalendarDays className="size-3.5" /> From
@@ -325,6 +327,17 @@ export function MovesPage() {
           />
         </label>
         <label className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">
+          Operator
+          <FilterSelect
+            ariaLabel="Operator"
+            className="w-full"
+            value={filters.userId}
+            onChange={(v) => set({ userId: v })}
+            allLabel="All operators"
+            options={(users.data ?? []).map((u) => ({ value: String(u.id), label: u.name }))}
+          />
+        </label>
+        <label className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">
           Search
           <span className="relative">
             <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
@@ -344,7 +357,7 @@ export function MovesPage() {
           </span>
         </label>
         {anyFilter && (
-          <div className="sm:col-span-2 lg:col-span-3 xl:col-span-6">
+          <div className="sm:col-span-2 lg:col-span-3 xl:col-span-7">
             <Button
               variant="link"
               className="text-sm"

@@ -13,8 +13,10 @@ export type User = {
   name: string;
   email: string;
   role: Role;
+  active: boolean;
   createdAt: string;
 };
+export type OrgUser = User & { movesRecorded: number; lastActivityAt: string | null };
 export type AuthResponse = { token: string; user: User };
 export type UserStats = {
   operationsValidated: number;

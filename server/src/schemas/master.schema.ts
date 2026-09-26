@@ -96,3 +96,7 @@ export const productQuery = pageQuery.extend({
 export type ProductCreate = z.infer<typeof productCreate>;
 export type ProductUpdate = z.infer<typeof productUpdate>;
 export type ProductQuery = z.infer<typeof productQuery>;
+
+export const userUpdate = z
+  .object({ role: z.enum(['MANAGER', 'STAFF']).optional(), active: z.boolean().optional() })
+  .refine((v) => v.role !== undefined || v.active !== undefined, { message: 'Nothing to update' });

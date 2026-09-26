@@ -11,6 +11,7 @@ import { ProductsPage } from '@/pages/products/ProductsPage';
 import { ProductFormPage } from '@/pages/products/ProductFormPage';
 import { ProductDetailPage } from '@/pages/products/ProductDetailPage';
 import { WarehousesPage } from '@/pages/settings/WarehousesPage';
+import { UsersPage } from '@/pages/settings/UsersPage';
 import { OperationListPage } from '@/pages/operations/OperationListPage';
 import { OperationFormPage } from '@/pages/operations/OperationFormPage';
 import { AdjustmentsPage } from '@/pages/operations/AdjustmentsPage';
@@ -36,6 +37,7 @@ export default function App() {
           <Route element={<ManagerRoute />}>
             <Route path="/products/new" element={<ProductFormPage />} />
             <Route path="/products/:id/edit" element={<ProductFormPage />} />
+            <Route path="/settings/users" element={<UsersPage />} />
           </Route>
           <Route path="/receipts" element={<OperationListPage key="RECEIPT" type="RECEIPT" />} />
           <Route

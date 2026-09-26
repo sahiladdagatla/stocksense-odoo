@@ -10,7 +10,7 @@ internal transfers and stock counts, all recorded in one append-only, auditable 
 - **Stock ledger**: every movement is recorded and never edited; an integrity check proves stock levels match history
 - **Scan Mode**: phone camera reads product QR labels and receives, delivers, moves or counts stock in one step
 - **Real-time**: every open screen refreshes via Socket.io when stock changes
-- **Roles**: Managers maintain master data; Staff run day-to-day operations
+- **Roles**: Managers maintain master data and manage users (promote, deactivate); Staff run day-to-day operations
 
 ## Quick start
 
@@ -132,6 +132,7 @@ creating, editing or deleting products, categories, warehouses or locations requ
 | Area        | Endpoints                                                                                                                                                                                                                                        |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Auth        | `POST /auth/signup` · `POST /auth/login` · `POST /auth/forgot-password` · `POST /auth/reset-password` · `GET/PATCH /auth/me` · `GET /auth/me/stats`                                                                                              |
+| Users       | `GET /users` · `PATCH /users/:id` (Manager: change role, deactivate or reactivate; not your own account)                                                                                                                                         |
 | Warehouses  | `GET/POST /warehouses` · `GET/PATCH/DELETE /warehouses/:id`                                                                                                                                                                                      |
 | Locations   | `GET/POST /locations` · `GET /locations/tree` · `GET/PATCH/DELETE /locations/:id`                                                                                                                                                                |
 | Categories  | `GET/POST /categories` · `PATCH/DELETE /categories/:id`                                                                                                                                                                                          |

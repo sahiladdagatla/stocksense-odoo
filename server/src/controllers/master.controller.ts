@@ -5,6 +5,7 @@ import * as wh from '../services/warehouse.service.js';
 import * as loc from '../services/location.service.js';
 import * as cat from '../services/category.service.js';
 import * as prod from '../services/product.service.js';
+import * as users from '../services/user.service.js';
 import {
   categoryBody,
   idParam,
@@ -14,6 +15,7 @@ import {
   productCreate,
   productQuery,
   productUpdate,
+  userUpdate,
   warehouseCreate,
   warehouseUpdate,
 } from '../schemas/master.schema.js';
@@ -98,4 +100,12 @@ export const updateProduct = async (req: Request, res: Response) => {
 export const deleteProduct = async (req: Request, res: Response) => {
   await prod.deleteProduct(id(req));
   res.status(204).end();
+};
+
+// Users
+export const listUsers = async (_req: Request, res: Response) => {
+  res.json(await users.listUsers());
+};
+export const updateUser = async (req: Request, res: Response) => {
+  res.json(await users.updateUser(currentUser(req).id, id(req), parse(userUpdate, req.body)));
 };

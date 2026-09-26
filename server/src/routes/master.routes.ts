@@ -46,3 +46,10 @@ export function productRoutes() {
   r.delete('/:id', manager, c.deleteProduct);
   return r;
 }
+
+export function userRoutes() {
+  const r = Router();
+  r.get('/', c.listUsers);
+  r.patch('/:id', manager, c.updateUser);
+  return r;
+}

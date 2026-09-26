@@ -20,13 +20,14 @@ export const OTP_RESEND_COOLDOWN_MS = 60 * 1000;
 /** Compared against when the email is unknown, so response timing doesn't reveal which accounts exist. */
 const dummyHash = hashSecret('stocksense-timing-equaliser');
 
-export type PublicUser = Pick<User, 'id' | 'name' | 'email' | 'role' | 'createdAt'>;
+export type PublicUser = Pick<User, 'id' | 'name' | 'email' | 'role' | 'active' | 'createdAt'>;
 
 export const toPublicUser = (u: User): PublicUser => ({
   id: u.id,
   name: u.name,
   email: u.email,
   role: u.role,
+  active: u.active,
   createdAt: u.createdAt,
 });
 
@@ -52,6 +53,9 @@ export async function login(input: LoginInput) {
   const user = await prisma.user.findUnique({ where: { email: input.email } });
   const ok = await verifySecret(input.password, user?.passwordHash ?? (await dummyHash));
   if (!user || !ok) throw unauthorized('Invalid email or password', 'INVALID_CREDENTIALS');
+  if (!user.active) {
+    throw unauthorized('This account has been deactivated. Contact a manager.', 'ACCOUNT_DISABLED');
+  }
   return session(user);
 }
 
@@ -61,7 +65,7 @@ export async function login(input: LoginInput) {
  */
 export async function requestPasswordReset(email: string) {
   const user = await prisma.user.findUnique({ where: { email } });
-  if (!user) return;
+  if (!user?.active) return;
 
   const now = Date.now();
   const issuedAt = user.otpExpiry ? user.otpExpiry.getTime() - OTP_TTL_MS : 0;
