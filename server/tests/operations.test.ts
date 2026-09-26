@@ -109,6 +109,8 @@ describe('operations API', () => {
     const wh = (await api().get(`/api/operations?warehouseId=${f.wh.id}&search=lod`).set(h.staff))
       .body;
     expect(wh.items.map((o: { partner: string }) => o.partner)).toEqual(['Lodha']);
+    const counts = (await api().get('/api/operations/counts?type=DELIVERY').set(h.staff)).body;
+    expect(counts).toMatchObject({ WAITING: 1, READY: 0, total: 1 });
     const bad = await api().get('/api/operations?status=NOPE').set(h.staff);
     expect(bad.status).toBe(400);
   });

@@ -11,6 +11,9 @@ import { ProductsPage } from '@/pages/products/ProductsPage';
 import { ProductFormPage } from '@/pages/products/ProductFormPage';
 import { ProductDetailPage } from '@/pages/products/ProductDetailPage';
 import { WarehousesPage } from '@/pages/settings/WarehousesPage';
+import { OperationListPage } from '@/pages/operations/OperationListPage';
+import { OperationFormPage } from '@/pages/operations/OperationFormPage';
+import { AdjustmentsPage } from '@/pages/operations/AdjustmentsPage';
 
 export default function App() {
   return (
@@ -28,6 +31,37 @@ export default function App() {
           <Route path="/products/new" element={<ProductFormPage />} />
           <Route path="/products/:id" element={<ProductDetailPage />} />
           <Route path="/products/:id/edit" element={<ProductFormPage />} />
+          <Route path="/receipts" element={<OperationListPage key="RECEIPT" type="RECEIPT" />} />
+          <Route
+            path="/receipts/new"
+            element={<OperationFormPage key="RECEIPT-new" type="RECEIPT" />}
+          />
+          <Route
+            path="/receipts/:id"
+            element={<OperationFormPage key="RECEIPT-edit" type="RECEIPT" />}
+          />
+          <Route
+            path="/deliveries"
+            element={<OperationListPage key="DELIVERY" type="DELIVERY" />}
+          />
+          <Route
+            path="/deliveries/new"
+            element={<OperationFormPage key="DELIVERY-new" type="DELIVERY" />}
+          />
+          <Route
+            path="/deliveries/:id"
+            element={<OperationFormPage key="DELIVERY-edit" type="DELIVERY" />}
+          />
+          <Route path="/transfers" element={<OperationListPage key="INTERNAL" type="INTERNAL" />} />
+          <Route
+            path="/transfers/new"
+            element={<OperationFormPage key="INTERNAL-new" type="INTERNAL" />}
+          />
+          <Route
+            path="/transfers/:id"
+            element={<OperationFormPage key="INTERNAL-edit" type="INTERNAL" />}
+          />
+          <Route path="/adjustments" element={<AdjustmentsPage />} />
           <Route path="/settings/warehouses" element={<WarehousesPage />} />
           <Route path="/settings/locations" element={<WarehousesPage />} />
           <Route path="/profile" element={<ProfilePage />} />

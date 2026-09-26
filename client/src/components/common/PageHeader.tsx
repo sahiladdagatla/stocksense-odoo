@@ -27,25 +27,7 @@ export function PageHeader({
 }) {
   return (
     <header className="mb-6">
-      {crumbs && crumbs.length > 0 && (
-        <nav
-          aria-label="Breadcrumb"
-          className="mb-2 flex items-center gap-1 text-sm text-muted-foreground"
-        >
-          {crumbs.map((c, i) => (
-            <Fragment key={`${c.label}-${i}`}>
-              {i > 0 && <ChevronRight className="size-3.5" aria-hidden />}
-              {c.to ? (
-                <Link to={c.to} className="hover:text-plum-nav hover:underline">
-                  {c.label}
-                </Link>
-              ) : (
-                <span className="text-ink">{c.label}</span>
-              )}
-            </Fragment>
-          ))}
-        </nav>
-      )}
+      {crumbs && crumbs.length > 0 && <Breadcrumbs crumbs={crumbs} />}
       <div className="flex flex-wrap items-start gap-4">
         <div className="min-w-0 flex-1">
           <h1 className="font-display text-headline-lg font-semibold text-ink">{title}</h1>
@@ -85,5 +67,27 @@ export function PageHeader({
         </div>
       </div>
     </header>
+  );
+}
+
+export function Breadcrumbs({ crumbs }: { crumbs: Crumb[] }) {
+  return (
+    <nav
+      aria-label="Breadcrumb"
+      className="mb-2 flex items-center gap-1 text-sm text-muted-foreground"
+    >
+      {crumbs.map((c, i) => (
+        <Fragment key={`${c.label}-${i}`}>
+          {i > 0 && <ChevronRight className="size-3.5" aria-hidden />}
+          {c.to ? (
+            <Link to={c.to} className="hover:text-plum-nav hover:underline">
+              {c.label}
+            </Link>
+          ) : (
+            <span className="text-ink">{c.label}</span>
+          )}
+        </Fragment>
+      ))}
+    </nav>
   );
 }

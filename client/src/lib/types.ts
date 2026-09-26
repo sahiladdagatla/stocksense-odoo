@@ -86,6 +86,54 @@ export type Move = {
   product: { id: number; name: string; sku: string; uom: string };
   fromLoc: LocRef;
   toLoc: LocRef;
-  operation: { id: number; reference: string; type: OpType; partner: string | null } | null;
+  operation: {
+    id: number;
+    reference: string;
+    type: OpType;
+    partner: string | null;
+    notes: string | null;
+  } | null;
   user: { id: number; name: string };
 };
+
+export type OpLoc = {
+  id: number;
+  name: string;
+  fullName: string;
+  type: LocType;
+  warehouseId: number | null;
+};
+
+export type OperationSummary = {
+  id: number;
+  reference: string;
+  type: OpType;
+  status: OpStatus;
+  partner: string | null;
+  sourceLocId: number;
+  destLocId: number;
+  sourceLoc: OpLoc;
+  destLoc: OpLoc;
+  scheduledDate: string;
+  validatedAt: string | null;
+  notes: string | null;
+  createdAt: string;
+  createdBy: { id: number; name: string };
+  _count: { lines: number };
+};
+
+export type OperationLine = {
+  id: number;
+  productId: number;
+  demandQty: number;
+  doneQty: number;
+  availableQty: number | null;
+  product: { id: number; name: string; sku: string; uom: string };
+};
+
+export type OperationDetail = Omit<OperationSummary, '_count' | 'createdBy'> & {
+  createdBy: { id: number; name: string; role: Role };
+  lines: OperationLine[];
+};
+
+export type OperationCounts = Record<OpStatus, number> & { total: number };

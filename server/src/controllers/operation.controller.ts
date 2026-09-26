@@ -21,6 +21,9 @@ const id = (req: Request) => parse(idParam, req.params).id;
 export async function list(req: Request, res: Response) {
   res.json(await docs.listOperations(parse(operationQuery, req.query)));
 }
+export async function counts(req: Request, res: Response) {
+  res.json(await docs.operationCounts(parse(operationQuery, req.query)));
+}
 export async function get(req: Request, res: Response) {
   res.json(await docs.getOperation(id(req)));
 }

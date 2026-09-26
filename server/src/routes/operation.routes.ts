@@ -5,6 +5,7 @@ import * as c from '../controllers/operation.controller.js';
 export function operationRoutes() {
   const r = Router();
   r.get('/', c.list);
+  r.get('/counts', c.counts);
   r.post('/', c.create);
   r.get('/:id', c.get);
   r.patch('/:id', c.update);

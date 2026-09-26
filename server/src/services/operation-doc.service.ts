@@ -10,7 +10,7 @@ const locSelect = {
   select: { id: true, name: true, fullName: true, type: true, warehouseId: true },
 } as const;
 
-export async function listOperations(q: OperationQuery) {
+function buildWhere(q: OperationQuery): Prisma.OperationWhereInput {
   const and: Prisma.OperationWhereInput[] = [];
   if (q.type) and.push({ type: q.type });
   if (q.status) and.push({ status: { in: q.status } });
@@ -31,7 +31,23 @@ export async function listOperations(q: OperationQuery) {
       ],
     });
   }
-  const where: Prisma.OperationWhereInput = { AND: and };
+  return { AND: and };
+}
+
+/** Count per status for the same filters as the list (status filter ignored). */
+export async function operationCounts(q: OperationQuery) {
+  const rows = await prisma.operation.groupBy({
+    by: ['status'],
+    where: buildWhere({ ...q, status: undefined }),
+    _count: true,
+  });
+  const counts = { DRAFT: 0, WAITING: 0, READY: 0, DONE: 0, CANCELED: 0 };
+  for (const r of rows) counts[r.status] = r._count;
+  return { ...counts, total: rows.reduce((a, r) => a + r._count, 0) };
+}
+
+export async function listOperations(q: OperationQuery) {
+  const where = buildWhere(q);
   const [total, items] = await Promise.all([
     prisma.operation.count({ where }),
     prisma.operation.findMany({

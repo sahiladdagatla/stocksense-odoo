@@ -25,7 +25,7 @@ const include = {
   product: { select: { id: true, name: true, sku: true, uom: true } },
   fromLoc: { select: { id: true, fullName: true, type: true } },
   toLoc: { select: { id: true, fullName: true, type: true } },
-  operation: { select: { id: true, reference: true, type: true, partner: true } },
+  operation: { select: { id: true, reference: true, type: true, partner: true, notes: true } },
   user: { select: { id: true, name: true } },
 } satisfies Prisma.StockMoveInclude;
 
