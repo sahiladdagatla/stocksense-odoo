@@ -6,7 +6,7 @@
 import { Prisma, type Location, type Operation, type OperationLine } from '@prisma/client';
 import { prisma, type Db } from '../lib/prisma.js';
 import { conflict, notFound, unprocessable } from '../lib/errors.js';
-import { emitStockUpdated } from '../lib/events.js';
+import { emitOperationChanged, emitStockUpdated } from '../lib/events.js';
 import { nextOperationReference } from '../lib/sequence.js';
 import { virtualLocation } from './location.service.js';
 
@@ -146,9 +146,10 @@ export async function validateOperationTx(
 
 /** Runs after a stock-changing transaction has committed. */
 async function afterCommit(op: Operation, productIds: number[]) {
-  emitStockUpdated({ operationId: op.id, reference: op.reference, type: op.type, productIds });
-  // Anything that added stock to an internal location may unblock WAITING documents.
+  // Anything that added stock to an internal location may unblock WAITING documents. Promote them
+  // first, so clients refreshing on the event below already see the new statuses.
   if (op.type !== 'DELIVERY') await recheckWaiting();
+  emitStockUpdated({ operationId: op.id, reference: op.reference, type: op.type, productIds });
 }
 
 /** THE single entry point that validates any operation type. */
@@ -184,17 +185,21 @@ export async function isAvailable(db: Db, operationId: number) {
 export async function recheckWaiting() {
   const waiting = await prisma.operation.findMany({
     where: { status: 'WAITING' },
-    select: { id: true },
+    select: { id: true, type: true },
     orderBy: { scheduledDate: 'asc' },
   });
   const promoted: number[] = [];
-  for (const { id } of waiting) {
+  for (const op of waiting) {
+    const { id } = op;
     if (await isAvailable(prisma, id)) {
       const { count } = await prisma.operation.updateMany({
         where: { id, status: 'WAITING' },
         data: { status: 'READY' },
       });
-      if (count) promoted.push(id);
+      if (count) {
+        promoted.push(id);
+        emitOperationChanged({ id, type: op.type, status: 'READY' });
+      }
     }
   }
   return promoted;

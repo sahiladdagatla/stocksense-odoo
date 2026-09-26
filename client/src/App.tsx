@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { GuestRoute, ProtectedRoute } from '@/components/layout/RouteGuards';
+import { GuestRoute, ManagerRoute, ProtectedRoute } from '@/components/layout/RouteGuards';
 import { LoginPage } from '@/pages/auth/LoginPage';
 import { SignupPage } from '@/pages/auth/SignupPage';
 import { ForgotPasswordPage } from '@/pages/auth/ForgotPasswordPage';
@@ -32,9 +32,11 @@ export default function App() {
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/products" element={<ProductsPage />} />
-          <Route path="/products/new" element={<ProductFormPage />} />
           <Route path="/products/:id" element={<ProductDetailPage />} />
-          <Route path="/products/:id/edit" element={<ProductFormPage />} />
+          <Route element={<ManagerRoute />}>
+            <Route path="/products/new" element={<ProductFormPage />} />
+            <Route path="/products/:id/edit" element={<ProductFormPage />} />
+          </Route>
           <Route path="/receipts" element={<OperationListPage key="RECEIPT" type="RECEIPT" />} />
           <Route
             path="/receipts/new"

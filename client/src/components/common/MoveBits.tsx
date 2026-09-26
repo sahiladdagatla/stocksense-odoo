@@ -34,7 +34,7 @@ function Loc({ loc }: { loc: LocRef }) {
 
 export function MoveRoute({ move }: { move: Pick<Move, 'fromLoc' | 'toLoc'> }) {
   return (
-    <span className="flex items-center gap-2 text-sm whitespace-nowrap">
+    <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm">
       <Loc loc={move.fromLoc} />
       <ArrowRight className="size-3.5 shrink-0 text-muted-foreground" aria-label="to" />
       <Loc loc={move.toLoc} />

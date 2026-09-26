@@ -498,14 +498,7 @@ export function DashboardPage() {
               />{' '}
               {live ? 'Live' : 'Offline'}
             </span>
-            Snapshot ·{' '}
-            {new Date().toLocaleDateString('en-IN', {
-              weekday: 'long',
-              day: 'numeric',
-              month: 'short',
-              year: 'numeric',
-            })}
-            , {fmtTime(new Date())}
+            {kpis.dataUpdatedAt ? `Updated ${fmtTime(new Date(kpis.dataUpdatedAt))}` : 'Loading…'}
           </p>
         </div>
         <DropdownMenu>
@@ -532,7 +525,7 @@ export function DashboardPage() {
         </DropdownMenu>
       </div>
 
-      <div className="mb-6 flex flex-wrap items-center gap-3 rounded-lg border border-divider bg-info-bg/40 p-4">
+      <div className="mb-6 flex flex-wrap items-center gap-3 rounded-lg border border-divider bg-canvas p-4">
         <div
           className="flex flex-wrap rounded-lg border border-divider bg-canvas p-1"
           role="radiogroup"

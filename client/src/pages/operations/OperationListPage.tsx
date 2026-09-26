@@ -134,7 +134,7 @@ export function OperationListPage({ type }: { type: DocType }) {
     {
       key: 'lines',
       header: 'Products',
-      hideBelow: 'lg',
+      hideBelow: 'xl',
       cell: (o) => `${o._count.lines} item${o._count.lines === 1 ? '' : 's'}`,
     },
     {
@@ -143,7 +143,7 @@ export function OperationListPage({ type }: { type: DocType }) {
       cell: (o) => {
         const flag = scheduleFlag(o.scheduledDate, o.status);
         return (
-          <span className="flex flex-wrap items-center gap-2 whitespace-nowrap">
+          <span className="flex flex-col items-start gap-1 whitespace-nowrap">
             <span className={cn('font-mono text-[13px]', flag?.tone === 'late' && 'text-danger')}>
               {fmtSchedule(o.scheduledDate)}
             </span>
@@ -164,7 +164,7 @@ export function OperationListPage({ type }: { type: DocType }) {
     {
       key: 'by',
       header: 'Responsible',
-      hideBelow: 'lg',
+      hideBelow: '2xl',
       cell: (o) => (
         <span className="flex items-center gap-2 whitespace-nowrap">
           <span className="flex size-6 items-center justify-center rounded-md bg-plum-tint text-[10px] font-bold text-plum">
@@ -228,7 +228,7 @@ export function OperationListPage({ type }: { type: DocType }) {
 
       {view === 'list' ? (
         <div
-          className="mb-4 flex gap-1 overflow-x-auto rounded-lg border border-divider bg-canvas p-1.5"
+          className="mb-4 flex flex-wrap gap-1 rounded-lg border border-divider bg-canvas p-1.5"
           role="tablist"
           aria-label="Status"
         >

@@ -187,3 +187,52 @@
     @apply focus-visible:border-plum focus-visible:ring-[3px] focus-visible:ring-plum/25 focus-visible:outline-none;
   }
 }
+
+/*
+ * Phones: tables become stacked cards instead of scrolling sideways. Each cell shows its column
+ * name from data-label; cells hidden at this breakpoint stay hidden.
+ */
+@media (max-width: 639px) {
+  .stack-table thead {
+    display: none;
+  }
+  .stack-table,
+  .stack-table tbody,
+  .stack-table tr {
+    display: block;
+    width: 100%;
+  }
+  .stack-table tr {
+    height: auto;
+    padding: 0.625rem 1rem;
+  }
+  .stack-table td:not([class~='hidden']) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.25rem 0;
+    text-align: right;
+  }
+  .stack-table td[data-label]::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .stack-table td:not([data-label]) {
+    justify-content: flex-end;
+  }
+  .stack-table td.stack-block {
+    display: block;
+    text-align: left;
+  }
+  .stack-table td.stack-block::before {
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+}

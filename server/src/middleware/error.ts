@@ -39,6 +39,18 @@ function fromPrisma(err: Prisma.PrismaClientKnownRequestError): [number, ErrorBo
     case 'P2025':
       return [404, { error: { code: 'NOT_FOUND', message: 'Record not found' } }];
     default:
+      // ON DELETE RESTRICT raises SQLSTATE 23001, which Prisma reports without a P2003 code.
+      if (/23001|RESTRICT|foreign key/i.test(err.message)) {
+        return [
+          409,
+          {
+            error: {
+              code: 'IN_USE',
+              message: 'This record is referenced by other data and cannot be changed',
+            },
+          },
+        ];
+      }
       return [500, { error: { code: 'DATABASE_ERROR', message: 'A database error occurred' } }];
   }
 }

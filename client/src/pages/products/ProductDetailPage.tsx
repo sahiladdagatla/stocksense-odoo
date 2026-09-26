@@ -72,7 +72,7 @@ export function ProductDetailPage() {
   if (error) return <ErrorState error={error} onRetry={() => void refetch()} />;
   if (isLoading || !data) {
     return (
-      <div className="space-y-6">
+      <div className="min-w-0 space-y-6">
         <Skeleton className="h-32 w-full" />
         <Skeleton className="h-28 w-full" />
         <Skeleton className="h-72 w-full" />

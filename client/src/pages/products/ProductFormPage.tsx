@@ -263,7 +263,7 @@ export function ProductFormPage() {
         }
       />
       <div className="grid gap-6 xl:grid-cols-[1fr_380px]">
-        <div className="space-y-6">
+        <div className="min-w-0 space-y-6">
           <Panel>
             <SectionHeaderBar
               icon={Package}
@@ -415,7 +415,7 @@ export function ProductFormPage() {
           )}
         </div>
 
-        <div className="space-y-6">
+        <div className="min-w-0 space-y-6">
           <Panel>
             <SectionHeaderBar icon={ArrowLeftRight} title="Reordering rule" />
             <div className="space-y-5 p-6">

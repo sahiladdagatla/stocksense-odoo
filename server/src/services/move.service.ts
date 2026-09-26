@@ -1,4 +1,5 @@
 import type { Prisma } from '@prisma/client';
+import { likeSafe } from '../lib/search.js';
 import { prisma } from '../lib/prisma.js';
 import type { MoveQuery } from '../schemas/operation.schema.js';
 
@@ -12,9 +13,9 @@ function whereFor(q: MoveQuery): Prisma.StockMoveWhereInput {
   if (q.search) {
     and.push({
       OR: [
-        { operation: { reference: { contains: q.search, mode: 'insensitive' } } },
-        { product: { name: { contains: q.search, mode: 'insensitive' } } },
-        { product: { sku: { contains: q.search, mode: 'insensitive' } } },
+        { operation: { reference: { contains: likeSafe(q.search), mode: 'insensitive' } } },
+        { product: { name: { contains: likeSafe(q.search), mode: 'insensitive' } } },
+        { product: { sku: { contains: likeSafe(q.search), mode: 'insensitive' } } },
       ],
     });
   }

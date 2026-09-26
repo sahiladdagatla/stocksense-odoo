@@ -10,10 +10,16 @@ export type Column<T> = {
   align?: 'left' | 'right' | 'center';
   className?: string;
   /** Hide on narrow screens. */
-  hideBelow?: 'sm' | 'md' | 'lg';
+  hideBelow?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 };
 
-const hide = { sm: 'hidden sm:table-cell', md: 'hidden md:table-cell', lg: 'hidden lg:table-cell' };
+const hide = {
+  sm: 'hidden sm:table-cell',
+  md: 'hidden md:table-cell',
+  lg: 'hidden lg:table-cell',
+  xl: 'hidden xl:table-cell',
+  '2xl': 'hidden 2xl:table-cell',
+};
 const align = { left: 'text-left', right: 'text-right', center: 'text-center' };
 
 /**
@@ -42,8 +48,9 @@ export function DataTable<T>({
   const showSkeleton = loading && !rows?.length;
   return (
     <div className={cn('overflow-hidden rounded-lg border border-divider bg-canvas', className)}>
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse text-sm">
+      {/* relative: keeps absolutely-positioned sr-only header text inside the scroller. */}
+      <div className="relative overflow-x-auto">
+        <table className="stack-table w-full border-collapse text-sm">
           <thead>
             <tr className="h-[38px] border-b border-divider bg-deck">
               {columns.map((c) => (
@@ -86,6 +93,7 @@ export function DataTable<T>({
                   {columns.map((c) => (
                     <td
                       key={c.key}
+                      data-label={typeof c.header === 'string' ? c.header : undefined}
                       className={cn(
                         'px-4 py-2',
                         align[c.align ?? 'left'],

@@ -108,7 +108,7 @@ export function ProfilePage() {
         subtitle="Your account details, activity and password."
       />
       <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
-        <div className="space-y-6">
+        <div className="min-w-0 space-y-6">
           <Panel className="p-6 text-center">
             <span className="mx-auto flex size-20 items-center justify-center rounded-xl bg-plum-deep font-display text-2xl font-bold text-white">
               {initials(user.name)}
@@ -152,7 +152,7 @@ export function ProfilePage() {
           </Panel>
         </div>
 
-        <div className="space-y-6">
+        <div className="min-w-0 space-y-6">
           <Panel>
             <SectionHeaderBar icon={UserRound} title="Personal information" />
             <form onSubmit={submitName} className="grid gap-5 p-6 sm:grid-cols-2">

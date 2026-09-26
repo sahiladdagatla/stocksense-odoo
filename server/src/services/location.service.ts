@@ -98,6 +98,16 @@ export async function deleteLocation(id: number) {
   ]);
   if (children) throw conflict('Delete or move its sub-locations first', 'LOCATION_HAS_CHILDREN');
   if (stocked) throw conflict('This location still holds stock', 'LOCATION_HAS_STOCK');
+  const [ops, moves] = await Promise.all([
+    prisma.operation.count({ where: { OR: [{ sourceLocId: id }, { destLocId: id }] } }),
+    prisma.stockMove.count({ where: { OR: [{ fromLocId: id }, { toLocId: id }] } }),
+  ]);
+  if (ops || moves) {
+    throw conflict(
+      'This location is used by operations or the ledger, so it cannot be deleted',
+      'IN_USE',
+    );
+  }
   // Empty quants are just cache rows; operations/moves referencing it make the delete fail with IN_USE.
   await prisma.$transaction([
     prisma.stockQuant.deleteMany({ where: { locationId: id } }),

@@ -116,8 +116,8 @@ export function KanbanBoard({
   };
 
   return (
-    <div className="-mx-4 overflow-x-auto px-4 pb-2 md:mx-0 md:px-0">
-      <div className="grid min-w-[960px] grid-cols-4 gap-4">
+    <div>
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {COLUMNS.map((col) => {
           const cards = items.filter((o) => o.status === col.status);
           const allowed = dragging ? actionFor(dragging.status, col.status) !== null : false;
@@ -136,7 +136,7 @@ export function KanbanBoard({
                 drop(col.status);
               }}
               className={cn(
-                'flex min-h-80 flex-col rounded-lg border border-divider bg-deck p-3 transition-colors',
+                'flex min-h-40 flex-col rounded-lg md:min-h-80 border border-divider bg-deck p-3 transition-colors',
                 dragging && allowed && 'border-dashed border-plum',
                 over === col.status && 'bg-plum-tint',
               )}

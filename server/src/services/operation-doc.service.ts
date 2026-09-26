@@ -1,5 +1,6 @@
 /** Reading and editing operation documents (the lifecycle lives in operation.service.ts). */
 import { Prisma } from '@prisma/client';
+import { likeSafe } from '../lib/search.js';
 import { prisma } from '../lib/prisma.js';
 import { conflict, notFound } from '../lib/errors.js';
 import { emitOperationChanged } from '../lib/events.js';
@@ -26,8 +27,8 @@ function buildWhere(q: OperationQuery): Prisma.OperationWhereInput {
   if (q.search) {
     and.push({
       OR: [
-        { reference: { contains: q.search, mode: 'insensitive' } },
-        { partner: { contains: q.search, mode: 'insensitive' } },
+        { reference: { contains: likeSafe(q.search), mode: 'insensitive' } },
+        { partner: { contains: likeSafe(q.search), mode: 'insensitive' } },
       ],
     });
   }

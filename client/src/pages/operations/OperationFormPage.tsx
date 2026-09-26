@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueries, useQueryClient } from '@tanstack/react-query';
 import {
   ArrowRight,
   CheckCircle2,
@@ -40,7 +40,7 @@ import { useOperationActions } from '@/hooks/useOperationActions';
 import { api, errorMessage } from '@/lib/api';
 import { fmtDateTime, fmtQty } from '@/lib/format';
 import { OP_META, toLocalInput, type DocType } from '@/lib/operations';
-import type { OperationDetail } from '@/lib/types';
+import type { OperationDetail, ProductStock } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { useWarehouse } from '@/providers/warehouse';
 
@@ -119,6 +119,27 @@ export function OperationFormPage({ type }: { type: DocType }) {
   const products = useMemo(() => productPage?.items ?? [], [productPage]);
   const actions = useOperationActions();
 
+  const [draftForStock, setDraftForStock] = useState<{ ids: number[]; source: number }>({
+    ids: [],
+    source: 0,
+  });
+  // Stock per location for every product on the document, so availability shows while editing.
+  const stockQueries = useQueries({
+    queries: draftForStock.ids.map((pid) => ({
+      queryKey: ['products', pid, 'stock'],
+      queryFn: () => api.get<ProductStock>(`/products/${pid}/stock`),
+      enabled: meta.pick.source,
+    })),
+  });
+  const stockByProduct = new Map(
+    stockQueries.flatMap((q, i) => (q.data ? [[draftForStock.ids[i]!, q.data] as const] : [])),
+  );
+  const availableFor = (productId: string): number | undefined => {
+    const st = stockByProduct.get(Number(productId));
+    if (!st) return undefined;
+    return st.locations.find((x) => x.location.id === draftForStock.source)?.quantity ?? 0;
+  };
+
   const [draft, setDraft] = useState<Draft | null>(null);
   const [initial, setInitial] = useState<string>('');
   const [saving, setSaving] = useState(false);
@@ -141,9 +162,16 @@ export function OperationFormPage({ type }: { type: DocType }) {
   useEffect(() => {
     if (id || draft || locations.length === 0) return;
     const inWh = locations.filter((l) => !warehouseId || l.warehouseId === warehouseId);
-    const first = inWh[0] ?? locations[0];
+    // Default to the warehouse's main "Stock" location; transfers go to one of its sub-locations.
+    const first =
+      inWh.find((l) => !l.parentId && l.name.toLowerCase() === 'stock') ??
+      inWh.find((l) => !l.parentId) ??
+      inWh[0] ??
+      locations[0];
     const second =
-      inWh.find((l) => l.id !== first?.id) ?? locations.find((l) => l.id !== first?.id);
+      inWh.find((l) => l.parentId === first?.id) ??
+      inWh.find((l) => l.id !== first?.id) ??
+      locations.find((l) => l.id !== first?.id);
     const productId = search.get('productId') ?? '';
     const d: Draft = {
       partner: '',
@@ -157,10 +185,19 @@ export function OperationFormPage({ type }: { type: DocType }) {
     setInitial(JSON.stringify(d));
   }, [id, draft, locations, warehouseId, search, meta.pick, type]);
 
+  const stockKey = draft
+    ? `${draft.sourceLocId}|${[...new Set(draft.lines.map((l) => l.productId).filter(Boolean))].join(',')}`
+    : '';
+  useEffect(() => {
+    if (!stockKey) return;
+    const [source, ids] = stockKey.split('|');
+    setDraftForStock({ source: Number(source) || 0, ids: ids ? ids.split(',').map(Number) : [] });
+  }, [stockKey]);
+
   if (id && error) return <ErrorState error={error} onRetry={() => void refetch()} />;
   if (!draft || (id && isLoading)) {
     return (
-      <div className="space-y-6">
+      <div className="min-w-0 space-y-6">
         <Skeleton className="h-24" />
         <Skeleton className="h-20" />
         <Skeleton className="h-96" />
@@ -264,6 +301,13 @@ export function OperationFormPage({ type }: { type: DocType }) {
         (l) => l.availableQty !== null && l.availableQty < (l.doneQty || l.demandQty),
       )
     : [];
+  // Before confirming: warn that a short draft will wait for stock instead of being ready.
+  const draftShort = editable
+    ? draft.lines.filter((l) => {
+        const a = availableFor(l.productId);
+        return l.productId && a !== undefined && a < (Number(l.demandQty) || 0);
+      })
+    : [];
 
   return (
     <>
@@ -274,7 +318,7 @@ export function OperationFormPage({ type }: { type: DocType }) {
           { label: op?.reference ?? 'New' },
         ]}
       />
-      <div className="space-y-6">
+      <div className="min-w-0 space-y-6">
         {/* Document header */}
         <Panel className="flex flex-wrap items-center gap-4 p-5">
           <span className="flex size-12 items-center justify-center rounded-lg bg-plum text-primary-foreground">
@@ -359,8 +403,22 @@ export function OperationFormPage({ type }: { type: DocType }) {
           </div>
         )}
 
+        {draftShort.length > 0 && (
+          <div
+            role="status"
+            className="flex items-start gap-3 rounded-lg border border-warning/30 bg-warning/10 p-4 text-sm text-warning"
+          >
+            <Info className="mt-0.5 size-4 shrink-0" />
+            <p>
+              The source doesn’t hold enough of{' '}
+              {draftShort.map((l) => productById.get(l.productId)?.name ?? 'a product').join(', ')}.
+              If you confirm now, this document will wait for stock.
+            </p>
+          </div>
+        )}
+
         <div className="grid gap-6 xl:grid-cols-[1fr_340px]">
-          <div className="space-y-6">
+          <div className="min-w-0 space-y-6">
             <Panel>
               <SectionHeaderBar icon={FileText} title={`${meta.label} details`} />
               <div className="grid gap-5 p-6 sm:grid-cols-2">
@@ -434,7 +492,7 @@ export function OperationFormPage({ type }: { type: DocType }) {
                 badge={`${draft.lines.filter((l) => l.productId).length} items`}
               />
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[640px] text-sm">
+                <table className="stack-table w-full text-sm">
                   <thead>
                     <tr className="h-[38px] border-b border-divider bg-deck text-left text-label font-semibold tracking-wide text-muted-foreground uppercase">
                       <th className="px-4">Product</th>
@@ -453,18 +511,21 @@ export function OperationFormPage({ type }: { type: DocType }) {
                       const p = productById.get(l.productId);
                       const info = lineInfo.get(l.productId);
                       const need = Number(l.doneQty) || Number(l.demandQty) || 0;
-                      const short =
-                        info?.availableQty != null && info.availableQty < need && status !== 'DONE';
+                      const avail =
+                        meta.pick.source && !['DONE', 'CANCELED'].includes(status)
+                          ? availableFor(l.productId)
+                          : undefined;
+                      const short = avail !== undefined && need > 0 && avail < need;
                       return (
                         <tr key={l.key} className="border-b border-divider last:border-0">
-                          <td className="px-4 py-2.5">
+                          <td data-label="Product" className="stack-block px-4 py-2.5">
                             {editable ? (
                               <Select
                                 value={l.productId}
                                 onValueChange={(v) => setLine(l.key, { productId: v })}
                               >
                                 <SelectTrigger
-                                  className="h-10 w-full min-w-56 rounded-lg"
+                                  className="h-10 w-full min-w-40 rounded-lg"
                                   aria-label="Product"
                                 >
                                   <SelectValue placeholder="Choose a product" />
@@ -497,7 +558,7 @@ export function OperationFormPage({ type }: { type: DocType }) {
                               </div>
                             )}
                           </td>
-                          <td className="px-4 py-2.5 text-right">
+                          <td data-label="Demand" className="px-4 py-2.5 text-right">
                             {editable ? (
                               <div className="flex items-center justify-end gap-2">
                                 <Input
@@ -506,7 +567,7 @@ export function OperationFormPage({ type }: { type: DocType }) {
                                   step="any"
                                   value={l.demandQty}
                                   onChange={(e) => setLine(l.key, { demandQty: e.target.value })}
-                                  className="h-10 w-28 text-right font-mono"
+                                  className="h-10 w-20 text-right font-mono sm:w-28"
                                   aria-label="Demand quantity"
                                 />
                                 <span className="w-10 text-left text-muted-foreground">
@@ -520,7 +581,10 @@ export function OperationFormPage({ type }: { type: DocType }) {
                             )}
                           </td>
                           {!editable && (
-                            <td className="px-4 py-2.5 text-right">
+                            <td
+                              data-label={status === 'DONE' ? 'Done' : 'Done qty'}
+                              className="px-4 py-2.5 text-right"
+                            >
                               {doneEditable ? (
                                 <Input
                                   type="number"
@@ -529,7 +593,7 @@ export function OperationFormPage({ type }: { type: DocType }) {
                                   value={l.doneQty}
                                   placeholder={l.demandQty}
                                   onChange={(e) => setLine(l.key, { doneQty: e.target.value })}
-                                  className="ml-auto h-10 w-28 border-plum text-right font-mono"
+                                  className="ml-auto h-10 w-20 border-plum sm:w-28 text-right font-mono"
                                   aria-label="Done quantity"
                                 />
                               ) : (
@@ -543,13 +607,14 @@ export function OperationFormPage({ type }: { type: DocType }) {
                           )}
                           {meta.pick.source && (
                             <td
+                              data-label="Available"
                               className={cn(
                                 'px-4 py-2.5 text-right font-mono whitespace-nowrap',
                                 short ? 'font-semibold text-danger' : 'text-muted-foreground',
                               )}
                             >
-                              {info?.availableQty != null && status !== 'DONE'
-                                ? `${fmtQty(info.availableQty)} ${info.product.uom}`
+                              {avail !== undefined
+                                ? `${fmtQty(avail)} ${p?.uom ?? info?.product.uom ?? ''}`
                                 : '—'}
                             </td>
                           )}
@@ -601,7 +666,7 @@ export function OperationFormPage({ type }: { type: DocType }) {
             </Panel>
           </div>
 
-          <div className="space-y-6">
+          <div className="min-w-0 space-y-6">
             <Panel className="p-5">
               <h3 className="mb-3 font-display text-headline-sm font-semibold">Summary</h3>
               <dl className="space-y-2.5 text-sm">

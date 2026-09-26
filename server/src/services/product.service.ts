@@ -1,6 +1,7 @@
 import type { Prisma } from '@prisma/client';
+import { likeSafe } from '../lib/search.js';
 import { prisma } from '../lib/prisma.js';
-import { badRequest, notFound } from '../lib/errors.js';
+import { badRequest, conflict, notFound } from '../lib/errors.js';
 import { adjustStockTx, notifyStockChange } from './stock.service.js';
 import type { ProductCreate, ProductQuery, ProductUpdate } from '../schemas/master.schema.js';
 
@@ -38,8 +39,8 @@ export async function listProducts(q: ProductQuery) {
   if (q.categoryId) where.categoryId = q.categoryId;
   if (q.search) {
     where.OR = [
-      { name: { contains: q.search, mode: 'insensitive' } },
-      { sku: { contains: q.search, mode: 'insensitive' } },
+      { name: { contains: likeSafe(q.search), mode: 'insensitive' } },
+      { sku: { contains: likeSafe(q.search), mode: 'insensitive' } },
     ];
   }
   const candidates = await prisma.product.findMany({
@@ -125,7 +126,17 @@ export async function updateProduct(id: number, input: ProductUpdate) {
 }
 
 export async function deleteProduct(id: number) {
-  await getProduct(id);
+  const product = await getProduct(id);
+  const [moves, lines] = await Promise.all([
+    prisma.stockMove.count({ where: { productId: id } }),
+    prisma.operationLine.count({ where: { productId: id } }),
+  ]);
+  if (product.onHand > 0 || moves > 0 || lines > 0) {
+    throw conflict(
+      'This product has stock or history in the ledger, so it cannot be deleted',
+      'IN_USE',
+    );
+  }
   // Products with ledger history can't be deleted (FK Restrict -> 409 IN_USE); empty quants can go.
   await prisma.$transaction([
     prisma.stockQuant.deleteMany({ where: { productId: id, quantity: 0 } }),

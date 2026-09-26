@@ -179,7 +179,7 @@ export function MovesPage() {
     {
       key: 'user',
       header: 'By',
-      hideBelow: 'lg',
+      hideBelow: '2xl',
       cell: (m) => <span className="whitespace-nowrap">{m.user.name}</span>,
     },
   ];
