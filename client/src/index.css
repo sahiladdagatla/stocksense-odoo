@@ -79,7 +79,8 @@
   --ink-muted: #a59ba8;
 
   --primary-foreground: #1c181f;
-  --chart-in: #7b9cf0;
+  --chart-in: #6b8af0;
+  --chart-out: #1aa893;
 }
 
 @theme inline {

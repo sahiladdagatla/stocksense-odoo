@@ -14,6 +14,7 @@ import { WarehousesPage } from '@/pages/settings/WarehousesPage';
 import { OperationListPage } from '@/pages/operations/OperationListPage';
 import { OperationFormPage } from '@/pages/operations/OperationFormPage';
 import { AdjustmentsPage } from '@/pages/operations/AdjustmentsPage';
+import { MovesPage } from '@/pages/MovesPage';
 
 export default function App() {
   return (
@@ -62,6 +63,7 @@ export default function App() {
             element={<OperationFormPage key="INTERNAL-edit" type="INTERNAL" />}
           />
           <Route path="/adjustments" element={<AdjustmentsPage />} />
+          <Route path="/moves" element={<MovesPage />} />
           <Route path="/settings/warehouses" element={<WarehousesPage />} />
           <Route path="/settings/locations" element={<WarehousesPage />} />
           <Route path="/profile" element={<ProfilePage />} />

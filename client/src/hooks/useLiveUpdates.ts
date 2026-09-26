@@ -1,7 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useSyncExternalStore } from 'react';
 import { io } from 'socket.io-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { tokenStore } from '@/lib/api';
+
+// Tiny store so any component (e.g. the dashboard's "Live" badge) can read the socket state.
+let live = false;
+const listeners = new Set<() => void>();
+function setLive(v: boolean) {
+  live = v;
+  listeners.forEach((l) => l());
+}
+export const useLiveStatus = () =>
+  useSyncExternalStore(
+    (cb) => (listeners.add(cb), () => listeners.delete(cb)),
+    () => live,
+  );
 
 const SOCKET_URL = (import.meta.env.VITE_API_URL as string | undefined) || undefined;
 
@@ -12,7 +25,6 @@ const SOCKET_URL = (import.meta.env.VITE_API_URL as string | undefined) || undef
  */
 export function useLiveUpdates(enabled: boolean) {
   const queryClient = useQueryClient();
-  const [connected, setConnected] = useState(false);
 
   useEffect(() => {
     const token = tokenStore.get();
@@ -21,15 +33,13 @@ export function useLiveUpdates(enabled: boolean) {
     const refresh = () =>
       queryClient.invalidateQueries({ predicate: (q) => q.queryKey[0] !== 'me' });
 
-    socket.on('connect', () => setConnected(true));
-    socket.on('disconnect', () => setConnected(false));
+    socket.on('connect', () => setLive(true));
+    socket.on('disconnect', () => setLive(false));
     socket.on('stock:updated', refresh);
     socket.on('operation:changed', refresh);
     return () => {
       socket.close();
-      setConnected(false);
+      setLive(false);
     };
   }, [enabled, queryClient]);
-
-  return connected;
 }
