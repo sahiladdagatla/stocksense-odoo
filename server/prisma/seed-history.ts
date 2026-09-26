@@ -154,7 +154,7 @@ export async function seedHistory() {
   }
 
   // 3) Regular customer deliveries from WH1/Stock (days -13..-1).
-  const deliverable = products.filter((p) => p.sku !== OUT_OF_STOCK);
+  const deliverable = regular;
   for (let i = 0; i < 10; i++) {
     const at = day(13 - Math.floor((i * 13) / 10));
     const chosen = new Map<number, (typeof products)[number]>();
@@ -182,7 +182,18 @@ export async function seedHistory() {
     const q = (await onHand(p.id, S1)) - Math.round(min(p) * 0.45);
     if (q > 0) lowLines.push({ productId: p.id, demandQty: q });
   }
-  await done('DELIVERY', day(2), lowLines, { from: S1, partner: 'Infosys Pune Campus' });
+  await done('DELIVERY', day(10), lowLines, { from: S1, partner: 'Infosys Pune Campus' });
+
+  // Replenishment receipts during the last week, so the movement chart shows both directions.
+  for (let i = 0; i < 5; i++) {
+    const chosen = [...new Map([pick(regular), pick(regular)].map((p) => [p.id, p])).values()];
+    await done(
+      'RECEIPT',
+      day(6 - i),
+      chosen.map((p) => ({ productId: p.id, demandQty: Math.max(2, Math.round(min(p) * 0.6)) })),
+      { to: S1, partner: pick(VENDORS) },
+    );
+  }
 
   // 5) Cycle counts (adjustments in both directions).
   await adjustStock(

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { requireAuth } from '../middleware/auth.js';
 import { authRoutes } from './auth.routes.js';
+import { dashboardRoutes } from './dashboard.routes.js';
 import { adjustmentRoutes, moveRoutes, operationRoutes } from './operation.routes.js';
 import { categoryRoutes, locationRoutes, productRoutes, warehouseRoutes } from './master.routes.js';
 
@@ -19,6 +20,7 @@ export function apiRoutes() {
   api.use('/operations', requireAuth, operationRoutes());
   api.use('/adjustments', requireAuth, adjustmentRoutes());
   api.use('/moves', requireAuth, moveRoutes());
+  api.use('/dashboard', requireAuth, dashboardRoutes());
 
   return api;
 }

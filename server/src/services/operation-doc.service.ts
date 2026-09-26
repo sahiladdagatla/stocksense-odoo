@@ -2,6 +2,7 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '../lib/prisma.js';
 import { conflict, notFound } from '../lib/errors.js';
+import { emitOperationChanged } from '../lib/events.js';
 import { assertProductsExist, resolveLocations } from './operation.service.js';
 import type { OperationQuery, OperationUpdate } from '../schemas/operation.schema.js';
 
@@ -150,5 +151,7 @@ export async function updateOperation(id: number, input: OperationUpdate) {
       },
     });
   });
-  return getOperation(id);
+  const updated = await getOperation(id);
+  emitOperationChanged(updated);
+  return updated;
 }

@@ -2,6 +2,7 @@ import type { Location, OpType, Prisma } from '@prisma/client';
 import { prisma } from '../lib/prisma.js';
 import { badRequest, conflict, notFound, unprocessable } from '../lib/errors.js';
 import { nextOperationReference } from '../lib/sequence.js';
+import { emitOperationChanged } from '../lib/events.js';
 import { virtualLocation } from './location.service.js';
 import { isAvailable, type EngineOptions } from './stock.service.js';
 import type { OperationCreate } from '../schemas/operation.schema.js';
@@ -93,8 +94,15 @@ export async function createOperationTx(
   });
 }
 
-export const createOperation = (input: OperationCreate, userId: number, opts: EngineOptions = {}) =>
-  prisma.$transaction((tx) => createOperationTx(tx, input, userId, opts));
+export async function createOperation(
+  input: OperationCreate,
+  userId: number,
+  opts: EngineOptions = {},
+) {
+  const op = await prisma.$transaction((tx) => createOperationTx(tx, input, userId, opts));
+  emitOperationChanged(op);
+  return op;
+}
 
 /**
  * DRAFT -> READY for receipts. Deliveries and transfers become READY when the source holds enough
@@ -116,7 +124,9 @@ export async function confirmOperation(id: number) {
     data: { status },
   });
   if (!count) throw conflict('The operation was changed by someone else', 'STALE');
-  return prisma.operation.findUniqueOrThrow({ where: { id } });
+  const updated = await prisma.operation.findUniqueOrThrow({ where: { id } });
+  emitOperationChanged(updated);
+  return updated;
 }
 
 export async function cancelOperation(id: number) {
@@ -131,5 +141,7 @@ export async function cancelOperation(id: number) {
     data: { status: 'CANCELED' },
   });
   if (!count) throw conflict('The operation was changed by someone else', 'STALE');
-  return prisma.operation.findUniqueOrThrow({ where: { id } });
+  const updated = await prisma.operation.findUniqueOrThrow({ where: { id } });
+  emitOperationChanged(updated);
+  return updated;
 }
